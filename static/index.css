@@ -1,0 +1,143 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: #333;
+    padding: 10px;
+    color: #fff;
+}
+
+header h1 {
+    text-align: center;
+    margin: 0;
+}
+
+header p {
+    text-align: center;
+    margin: 0;
+}
+
+header a {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+}
+#appleid-signin {
+    display: none;
+}
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+label {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+select {
+    width: 200px;
+    padding: 5px;
+}
+
+.currency_main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.currency_from,
+.currency_to {
+    margin-bottom: 10px;
+}
+
+.currency_cal_btn {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.currency_rate {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.note_currency_rate {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.input_note_currency {
+    width: 210px;
+    padding: 5px;
+    margin-bottom: 20px;
+}
+
+#currencyInput {
+    width: 100%;
+}
+
+#switchBtn {
+    background-color: #fff;
+    border-radius: 20%;
+    border-color: #fff;
+}
+#switchBtn:hover {
+    border-color: #118bee;
+    color: #fff;
+}
+
+.notification_btn,
+.save_currency_btn {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.notification_btn {
+    margin-right: 10px;
+}
+
+.save_currency_btn {
+    background-color: #008000;
+}
+
+.currencyNotifiInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#getCurrencyRateNotiBtn {
+    /* 
+    background-color: #fff;
+    */
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    border: none;
+    background-color: transparent;
+    border-color: #fff;
+    cursor: pointer;
+    transition: transform 0.3s;
+}

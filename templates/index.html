@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+        <meta name="appleid-signin-client-id" content="[CLIENT_ID]" />
+        <meta name="appleid-signin-scope" content="[SCOPES]" />
+        <meta name="appleid-signin-redirect-uri" content="[REDIRECT_URI]" />
+        <meta name="appleid-signin-state" content="[STATE]" />
+        <meta name="appleid-signin-nonce" content="[NONCE]" />
+        <meta name="appleid-signin-use-popup" content="true" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" />
+        <title>currency rate notification</title>
+    </head>
+    <body>
+        <header>
+            <h1>환율 알람</h1>
+            <script
+                type="text/javascript"
+                src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"
+            ></script>
+            <div id="appleid-signin" data-color="black" data-border="true" data-type="sign in"></div>
+            {% if not current_user.is_authenticated %}
+            <a href="/google-login">
+                <img
+                    src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png"
+                    alt="Google Sign-In"
+                />
+            </a>
+            {% else %}
+            <!-- <p>Hello, {{ current_user.name }}!</p> -->
+            <p>{{ current_user.picture }}</p>
+            <p>Logged in as {{ current_user.email }}</p>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
+        </header>
+        <main>
+            <div class="from_country_grp">
+                <form action="#">
+                    <label for="country_group">From country group</label>
+                    <select class="from_country_group" name="country_group">
+                        <option value="select">Select a Group</option>
+                        <option value="Asia">Asia</option>
+                        <option value="America">America</option>
+                        <option value="Oceania">Oceania</option>
+                        <option value="Euro">Euro</option>
+                    </select>
+                </form>
+            </div>
+            <div class="to_country_grp">
+                <form action="#">
+                    <label for="country_group">To country group</label>
+                    <select class="to_country_group" name="country_group">
+                        <option value="select">Select a Group</option>
+                        <option value="Asia">Asia</option>
+                        <option value="America">America</option>
+                        <option value="Oceania">Oceania</option>
+                        <option value="Euro">Euro</option>
+                    </select>
+                </form>
+            </div>
+            <div class="currency_main">
+                <form action="/getCurrencyRate" method="get" id="currency_main_form">
+                    <div class="currency_from">
+                        <label for="currency">From currency</label>
+                        <select class="from_country" name="currency_from"></select>
+                    </div>
+                    <button id="switchBtn">
+                        <img src="/static/exchange.png" alt="exchange" />
+                    </button>
+                    <div class="currency_to">
+                        <label for="currency">To currency</label>
+                        <select class="to_country" name="currency_to"></select>
+                    </div>
+                    <div class="currency_cal">
+                        <button id="currency_cal_btn">환율 계산</button>
+                    </div>
+                </form>
+            </div>
+            <div class="real_time_currency_rate">
+                <h1 id="currency_rate"></h1>
+            </div>
+            {% if current_user.is_authenticated %}
+            <div class="note_currency_rate">
+                <h4>목표 환율 설정</h4>
+                <form action="/saveCurrencyRate" method="post" id="currency_save_form">
+                    <div class="currency_from">
+                        <label for="currency">From currency</label>
+                        <select class="save_from_country" name="save_from_country" disabled></select>
+                    </div>
+                    <div class="currency_to">
+                        <label for="currency">To currency</label>
+                        <select class="save_to_country" name="save_to_country" disabled></select>
+                    </div>
+                    <div class="input_note_currency">
+                        <h5><b>Input CurrencyRate</b></h5>
+                        <input
+                            id="currencyInput"
+                            name="currencyInput"
+                            type="text"
+                            placeholder="목표 환율"
+                            required="true"
+                        />
+                    </div>
+                    <!-- <button id="notificationBtn">알림 허용</button> -->
+                    <button id="save_currency_btn">save currency rate</button>
+                </form>
+            </div>
+
+            <div class="currencyNotifiInfo">
+                <h5><b>Your Currency Notification Infofamation List</b></h5>
+                <button id="getCurrencyRateNotiBtn">▼</button>
+                <div class="content">
+                    <h5><b>title</b></h5>
+                    <div>from country</div>
+                    <div>to country</div>
+                    <div>goal currency rate</div>
+                </div>
+            </div>
+            {% endif %}
+        </main>
+        <script src="{{ url_for('static', filename='country.js') }}"></script>
+        <script src="{{ url_for('static', filename='index.js') }}"></script>
+        <script src="{{ url_for('static', filename='apple.js') }}"></script>
+        <!-- <script src="{{ url_for('static', filename='module.js') }}"></script> -->
+    </body>
+</html>
