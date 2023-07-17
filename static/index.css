@@ -65,9 +65,9 @@ select {
     margin-bottom: 10px;
 }
 
-.currency_cal_btn {
+#currency_cal_btn {
     padding: 10px 20px;
-    background-color: #333;
+    background-color: #118bee;
     color: #fff;
     border: none;
     cursor: pointer;
@@ -106,9 +106,9 @@ select {
 }
 
 .notification_btn,
-.save_currency_btn {
+#save_currency_btn {
     padding: 10px 20px;
-    background-color: #333;
+    background-color: #118bee;
     color: #fff;
     border: none;
     cursor: pointer;
