@@ -2,7 +2,9 @@
 showing Currency Rate &amp; Notice CurrencyRate setted
 simple app
 
-..still making..
+I've bulit this app to check currency rate for now easily and to use app myself
+
+still making
 
 tech
 ------------------------------------------------------
