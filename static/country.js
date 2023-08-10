@@ -1,5 +1,5 @@
 const country = {
-    'Asia' : [
+    Asia: [
         'krw', // korea
         'cny', // china
         'hkd', // hongkong
@@ -13,15 +13,7 @@ const country = {
         'myr', // malaysia
         'idr', // indonesia
     ],
-    'Euro' : [
-        'eur',
-    ],
-    'Oceania' : [
-        'aud',
-        'nzd'
-    ],
-    'America' : [
-        'usd'
-    ]
-}
-         
+    Euro: ['eur'],
+    Oceania: ['aud', 'nzd'],
+    America: ['usd', 'ars'],
+};

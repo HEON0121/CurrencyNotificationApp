@@ -1,4 +1,5 @@
 import pymysql
+import traceback
 from dotenv import dotenv_values
 from flask_login import UserMixin
 env_vars = dotenv_values(".env")
@@ -10,6 +11,61 @@ db = pymysql.connect(
     db=env_vars.get("DB_NAME"),
     charset="utf8"
 )
+
+
+class Session():
+    def __init__(self, _id, _user_Id):
+        self.id = _id
+        self.user_Id = _user_Id
+
+    @staticmethod
+    def getSession(user_Id):
+        try:
+            with db.cursor() as cursor:
+                sql = "select user_Id from sessions where user_Id=%s"
+                cursor.execute(sql, (user_Id))
+                result = cursor.fetchone()
+
+                if result:
+                    session = result[0]
+                    return session
+                else:
+                    return None
+        except Exception as e:
+            print(traceback.format_exc())
+            return None
+
+    @staticmethod
+    def insertSession(user_Id):
+        sql = '''insert 
+            into sessions 
+            (
+                user_Id   
+            ) 
+            values
+            (
+                %s           
+            )'''
+        try:
+            with db.cursor() as cursor:
+                cursor.execute(sql, (user_Id,))
+                db.commit()
+                inserted_id = cursor.lastrowid
+                return inserted_id
+        except Exception as e:
+            print(traceback.format_exc())
+            return None
+
+    @staticmethod
+    def deleteSession(user_Id):
+        try:
+            with db.cursor() as cursor:
+                sql = "delete from sessions where user_Id=%s"
+                cursor.execute(sql, (user_Id,))
+                db.commit()
+        except Exception as e:
+            print(traceback.format_exc())
+            return None
 
 
 class User(UserMixin):
@@ -61,31 +117,41 @@ class User(UserMixin):
 
 
 class CurrencyNotification():
-    def __init__(self, _id, _userId, _userEmail, _fromCountry, _toCountry, _goalCurrencyRate):
+    def __init__(self, _id, _userId, _userEmail, _fromCountry, _toCountry, _goalCurrencyRate, _isSubscribed):
         self.id = _id
         self.userId = _userId
         self.userEmail = _userEmail
         self.fromCountry = _fromCountry
         self.toCountry = _toCountry
         self.goalCurrencyRate = _goalCurrencyRate
+        self.isSubscribed = _isSubscribed
 
     @staticmethod
     def getGoalCurrency(user_Id):
-        cursor = db.cursor()
-        sql = "select * from currency_rate_notification where user_Id=%s"
-        cursor.execute(sql, (user_Id))
-        result = cursor.fetchone()
-        if result:
-            currencyNotification = CurrencyNotification(
-                _id=result[0],
-                _userId=result[1],
-                _userEmail=result[2],
-                _fromCountry=result[3],
-                _toCountry=result[4],
-                _goalCurrencyRate=result[5],
-            )
-            return currencyNotification
-        else:
+        try:
+            with db.cursor() as cursor:
+                sql = "select * from currency_rate_notification where user_Id=%s"
+                cursor.execute(sql, (user_Id))
+                result = cursor.fetchall()
+                if result:
+                    currencyNotifications = []
+                    for row in result:
+                        currencyNotification = CurrencyNotification(
+                            _id=row[0],
+                            _userId=row[1],
+                            _userEmail=row[2],
+                            _fromCountry=row[3],
+                            _toCountry=row[4],
+                            _goalCurrencyRate=row[5],
+                            _isSubscribed=row[6],
+
+                        )
+                        currencyNotifications.append(currencyNotification)
+                    return currencyNotifications
+                else:
+                    return None
+        except Exception as e:
+            print(traceback.format_exc())
             return None
 
     @staticmethod
@@ -94,30 +160,70 @@ class CurrencyNotification():
                            from_country,
                            to_country,
                            goal_currency):
-        sql = '''insert 
-            into currency_rate_notification 
-            (
-                user_Id, 
-                user_email,
-                from_country, 
-                to_country, 
-                goal_currency_rate                
-            ) 
-            values
-            (
-                %s,
-                %s,
-                %s,
-                %s,
-                %s
-            )'''
-        cursor = db.cursor()
-        cursor.execute(sql, (user_Id,
-                             user_email,
-                             from_country,
-                             to_country,
-                             goal_currency))
-        db.commit()
-        db.close()
-        inserted_id = cursor.lastrowid
-        return inserted_id
+        try:
+            with db.cursor() as cursor:
+                sql = '''insert 
+                    into currency_rate_notification 
+                    (
+                        user_Id, 
+                        user_email,
+                        from_country, 
+                        to_country, 
+                        goal_currency_rate                
+                    ) 
+                    values
+                    (
+                        %s,
+                        %s,
+                        %s,
+                        %s,
+                        %s
+                    )'''
+
+                cursor.execute(sql, (user_Id,
+                                     user_email,
+                                     from_country,
+                                     to_country,
+                                     goal_currency))
+                db.commit()
+                inserted_id = cursor.lastrowid
+                return inserted_id
+        except Exception as e:
+            print(traceback.format_exc())
+            return None
+
+    @staticmethod
+    def deleteGoalCurrency(id):
+        try:
+            with db.cursor() as cursor:
+                sql = "delete from currency_rate_notification where notification_Id=%s"
+                deleted_row = cursor.execute(sql, (id,))
+                if deleted_row > 0:
+                    db.commit()
+                return deleted_row
+        except Exception as e:
+            print(traceback.format_exc())
+
+    @staticmethod
+    def updateGoalCurrency(targetCurrency, id):
+        try:
+            with db.cursor() as cursor:
+                sql = "update currency_rate_notification set goal_currency_rate = %s where notification_Id=%s"
+                updated_row = cursor.execute(sql, (targetCurrency, id))
+                if updated_row > 0:
+                    db.commit()
+                return updated_row
+        except Exception as e:
+            print(traceback.format_exc())
+
+    @staticmethod
+    def updateSubscribed(isSubscribed, id):
+        try:
+            with db.cursor() as cursor:
+                sql = "update currency_rate_notification set is_Subscribed = %s where notification_Id=%s"
+                updated_row = cursor.execute(sql, (isSubscribed, id))
+                if updated_row > 0:
+                    db.commit()
+                return updated_row
+        except Exception as e:
+            print(traceback.format_exc())

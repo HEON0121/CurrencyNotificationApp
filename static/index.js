@@ -11,8 +11,14 @@ const notificationBtn = document.getElementById('notificationBtn');
 const switchBtn = document.getElementById('switchBtn');
 const currencyInput = document.getElementById('currencyInput');
 const currency_save_form = document.getElementById('currency_save_form');
+const saved_goal_currencies = document.querySelectorAll('.saved_goal_currency');
 const getCurrencyRateNotiBtn = document.getElementById('getCurrencyRateNotiBtn');
-
+const deleteCurrencyRateBtns = document.querySelectorAll('.deleteCurrencyRateBtn');
+const updateCurrencyRateBtns = document.querySelectorAll('.updateCurrencyRateBtn');
+const saveCurrencyRateBtns = document.querySelectorAll('.saveCurrencyRateBtn');
+const cancelBtns = document.querySelectorAll('.cancelBtn');
+const subscribeBtns = document.querySelectorAll('.subscribeBtn');
+const unSubscribeBtns = document.querySelectorAll('.unSubscribeBtn');
 let from_currency = '';
 let to_currency = '';
 
@@ -211,7 +217,7 @@ switchBtn.addEventListener('click', switchCountry);
 const updateCurrencyRate = () => {
     let currency_main_form = document.getElementById('currency_main_form');
     const formData = new FormData(currency_main_form);
-    console.log(`form data : ${new URLSearchParams(formData).toString()}`);
+    // console.log(`form data : ${new URLSearchParams(formData).toString()}`);
     let xhr = new XMLHttpRequest();
     xhr.open('GET', '/getCurrencyRate?' + new URLSearchParams(formData).toString(), true);
     xhr.send();
@@ -220,8 +226,10 @@ const updateCurrencyRate = () => {
         if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
             let response = JSON.parse(xhr.responseText);
             if (response.currency_rate) {
-                let currencyRateElement = document.getElementById('currency_rate');
-                currencyRateElement.textContent = '현재 환율: ' + response.currency_rate;
+                let currencyRateElement = document.querySelector('.currency_rate');
+                currencyRateElement.textContent = 'Current Currency rate';
+                let currencyRate = document.querySelector('.currency_rate_value');
+                currencyRate.textContent = response.currency_rate;
             }
         }
     };
@@ -234,7 +242,7 @@ const updateCurrencyRate = () => {
  *
  * to-do: return script func into python schedule func
  */
-// let intervalId;
+
 // get real time currency-rate
 
 const getCurrencyRate = (e) => {
@@ -243,12 +251,6 @@ const getCurrencyRate = (e) => {
     updateCurrencyRate();
 
     // currency_cal_btn.disabled = true;
-
-    // if (intervalId) {
-    //   clearInterval(intervalId);
-    // }
-
-    // intervalId = setInterval(updateCurrencyRate, 5000)
 };
 
 currency_cal_btn.addEventListener('click', getCurrencyRate);
@@ -278,83 +280,206 @@ currencyInput.addEventListener('input', function () {
     }
 });
 
-const handleSaveGoalCurrency = (e) => {
+// save Target Currency
+const handleSaveTargetCurrency = (e) => {
     e.preventDefault();
     let currency_save_form = document.getElementById('currency_save_form');
+    let currency_Input = currency_save_form.currencyInput.value;
+
+    currency_Input = parseFloat(currency_Input.replace(/,/g, ''));
+    currency_save_form.currencyInput.value = currency_Input;
+
     save_from_country.disabled = false;
     save_to_country.disabled = false;
+
     const formData = new FormData(currency_save_form);
     save_from_country.disabled = true;
     save_to_country.disabled = true;
-    console.log(`save form data : ${new URLSearchParams(formData).toString()}`);
+
+    // console.log(`save form data : ${new URLSearchParams(formData).toString()}`);
+    // console.log(`formData : ${formData.toString()}`);
+
     let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/saveGoalCurrencyRate', true);
+    xhr.open('POST', '/saveTargetCurrencyRate', true);
     xhr.send(formData);
 
-    xhr.onreadystatechange = function () {
+    xhr.onreadystatechange = async function () {
         if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
             let response = JSON.parse(xhr.response);
+            // console.log(response);
+            await showSubscriptionToast('saved', 2000);
+            location.reload();
         }
     };
 };
-save_currency_btn.addEventListener('click', handleSaveGoalCurrency);
+save_currency_btn.addEventListener('click', handleSaveTargetCurrency);
+
+getCurrencyRateNotiBtn.addEventListener('click', function () {
+    getCurrencyRateNotiBtn.classList.toggle('rotate');
+    const goalCurrencyList = document.querySelector('.goalCurrencyList');
+    goalCurrencyList.classList.toggle('show-content');
+});
+
+// delete Notification
+const handleDeleteTargetCurrency = async (e) => {
+    const content = e.target.closest('.content');
+    let id = content.querySelector('.notificationId').value;
+    console.log(id);
+    const response = await fetch(`/deleteCurrencyNotification/${id}`, { method: 'DELETE' });
+    if (response.ok) {
+        console.log(response);
+        content.remove();
+    }
+};
+deleteCurrencyRateBtns.forEach((btn) => {
+    btn.addEventListener('click', handleDeleteTargetCurrency);
+});
+
+// edit currency rate
+
+updateCurrencyRateBtns.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+        const editBtn = btn;
+        const form = editBtn.closest('.content').querySelector('form');
+        const input = form.querySelector('.saved_goal_currency');
+        input.readOnly = !input.readOnly;
+        input.focus();
+
+        const btn_group = editBtn.closest('.content__btn_group');
+        const saveBtn = btn_group.querySelector('.saveCurrencyRateBtn');
+        saveBtn.classList.remove('hidden_Btn');
+        editBtn.classList.add('hidden_Btn');
+
+        const deleteBtn = btn_group.querySelector('.deleteCurrencyRateBtn');
+        deleteBtn.classList.add('hidden_Btn');
+
+        const cancelBtn = btn_group.querySelector('.cancelBtn');
+        cancelBtn.classList.remove('hidden_Btn');
+    });
+});
+
+cancelBtns.forEach((btn) => {
+    let saved_goal_currency = null;
+    const input = btn.closest('.content').querySelector('form').querySelector('.saved_goal_currency');
+    input.addEventListener('focus', (e) => {
+        saved_goal_currency = e.target.value;
+    });
+    btn.addEventListener('click', (e) => {
+        btn.classList.add('hidden_Btn');
+        const form = btn.closest('.content').querySelector('form');
+        const input = form.querySelector('.saved_goal_currency');
+        input.value = saved_goal_currency;
+        input.readOnly = !input.readOnly;
+        const btn_group = btn.closest('.content__btn_group');
+        const saveBtn = btn_group.querySelector('.saveCurrencyRateBtn');
+        saveBtn.classList.add('hidden_Btn');
+        const delBtn = btn_group.querySelector('.deleteCurrencyRateBtn');
+        delBtn.classList.remove('hidden_Btn');
+        const editBtn = btn_group.querySelector('.updateCurrencyRateBtn');
+        editBtn.classList.remove('hidden_Btn');
+    });
+});
+// edit-save
+const handleSaveCurrencyRate = async (e) => {
+    const form = e.target.closest('.content').querySelector('form');
+    const input = form.querySelector('.saved_goal_currency');
+    const value = input.value;
+    const id = e.target.getAttribute('data-id');
+    const data = {
+        saved_goal_currency: value,
+        id: id,
+    };
+    await fetch('/updateCurrencyNotification', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then((response) => response.json())
+        .then((result) => {
+            console.log('from update server ::: ', result);
+            location.reload();
+        })
+        .catch((e) => {
+            console.log('error : ', e);
+        });
+};
+saveCurrencyRateBtns.forEach((btn) => {
+    btn.addEventListener('click', handleSaveCurrencyRate);
+});
+
+const handleUpdateSubscription = async (isSubscribed, id) => {
+    const data = {
+        is_subscribed: isSubscribed,
+        id: id,
+    };
+    const response = await fetch('/updateSubscription', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then((response) => response.json())
+        .then((result) => {
+            console.log('from update server ::: ', result);
+            showSubscriptionToast(result.message, 2000);
+            // location.reload();
+        })
+        .catch((e) => {
+            // console.log('error : ', e);
+        });
+};
+// subscription : 1 unsubscription : 0
+// show subscription toast
+const showSubscriptionToast = (msg, duration) => {
+    const toast__content = document.querySelector('.toast__content');
+    toast__content.textContent = msg;
+    toast__content.classList.add('show-toast');
+    setTimeout(() => {
+        toast__content.classList.remove('show-toast');
+    }, duration);
+};
+// subscribe Btn
+subscribeBtns.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+        const btnGrp = btn.closest('.subscribe__btn_group');
+        const unSubBtn = btnGrp.querySelector('.unSubscribeBtn');
+        unSubBtn.classList.toggle('hidden_Btn');
+        btn.classList.toggle('hidden_Btn');
+        const id = btn.getAttribute('data-id');
+        const isSubscribed = 1;
+        handleUpdateSubscription(isSubscribed, id);
+    });
+});
+// unsubscribe Btn
+unSubscribeBtns.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+        const btnGrp = btn.closest('.subscribe__btn_group');
+        const subBtn = btnGrp.querySelector('.subscribeBtn');
+        subBtn.classList.toggle('hidden_Btn');
+        btn.classList.toggle('hidden_Btn');
+        const id = btn.getAttribute('data-id');
+        const isSubscribed = 0;
+        handleUpdateSubscription(isSubscribed, id);
+    });
+});
 // service-worker
 
-const isServiceWorkerSupported = 'serviceWorker' in navigator;
-if (isServiceWorkerSupported) {
-    //브라우저에 Service Worker를 등록
-    navigator.serviceWorker
-        .register('service-worker.js', { scope: '/' })
-        .then(function (registration) {
-            console.log('[ServiceWorker] 등록 성공: ', registration.scope);
-        })
-        .catch(function (err) {
-            console.log('[ServiceWorker] 등록 실패: ', err);
-        });
-}
+document.addEventListener('DOMContentLoaded', async () => {
+    if ('serviceWorker' in navigator) {
+        try {
+            const registration = await navigator.serviceWorker.register('/service-worker.js');
+            console.log('Service Worker registered with scope:', registration.scope);
+        } catch (error) {
+            console.error('Service Worker registration failed:', error);
+        }
+    }
+});
 // notification
-const createNotification = () => {
-    let notification = new Notification('', {});
-};
-
-const checkNotificationPromise = () => {
-    try {
-        Notification.requestPermission().then();
-    } catch (e) {
-        return false;
-    }
-
-    return true;
-};
-
-const askNotificationPermission = () => {
-    // 권한을 실제로 요구하는 함수
-    const handlePermission = (permission) => {
-        // 사용자의 응답에 관계 없이 크롬이 정보를 저장할 수 있도록 함
-        if (!('permission' in Notification)) {
-            Notification.permission = permission;
-        }
-
-        // 사용자 응답에 따라 단추를 보이거나 숨기도록 설정
-        if (Notification.permission === 'denied' || Notification.permission === 'default') {
-            notificationBtn.style.display = 'block';
-        } else {
-            notificationBtn.style.display = 'none';
-        }
-    };
-
-    // 브라우저가 알림을 지원하는지 확인
-    if (!('Notification' in window)) {
-        alert('이 브라우저는 알림을 지원하지 않습니다.');
-    } else {
-        if (checkNotificationPromise()) {
-            Notification.requestPermission().then((permission) => {
-                handlePermission(permission);
-            });
-        } else {
-            Notification.requestPermission(function (permission) {
-                handlePermission(permission);
-            });
-        }
-    }
-};
+// createNotification();
+// const createNotification = () => {
+//     let notification = new Notification('', {});
+//     Notification.permission;
+// };

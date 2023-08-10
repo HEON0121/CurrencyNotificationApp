@@ -5,31 +5,32 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css" />
+        <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
-        <meta name="appleid-signin-client-id" content="[CLIENT_ID]" />
+        <!-- <meta name="appleid-signin-client-id" content="[CLIENT_ID]" />
         <meta name="appleid-signin-scope" content="[SCOPES]" />
         <meta name="appleid-signin-redirect-uri" content="[REDIRECT_URI]" />
         <meta name="appleid-signin-state" content="[STATE]" />
         <meta name="appleid-signin-nonce" content="[NONCE]" />
-        <meta name="appleid-signin-use-popup" content="true" />
+        <meta name="appleid-signin-use-popup" content="true" /> -->
         <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" />
         <title>currency rate notification</title>
     </head>
     <body>
         <header>
             <h1>Currency Notification</h1>
-            <script
+            <!-- <script
                 type="text/javascript"
                 src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"
-            ></script>
-            <div id="appleid-signin" data-color="black" data-border="true" data-type="sign in"></div>
+            ></script>             -->
+            <!-- <div id="appleid-signin" data-color="black" data-border="true" data-type="sign in"></div> -->
             {% if not current_user.is_authenticated %}
-            <a href="/google-login">
-                <img
-                    src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png"
-                    alt="Google Sign-In"
-                />
-            </a>
+                <a href="/google-login">
+                    <img
+                        src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png"
+                        alt="Google Sign-In"
+                    />
+                </a>                        
             {% else %}
             <!-- <p>Hello, {{ current_user.name }}!</p> -->
             <p>{{ current_user.picture }}</p>
@@ -81,11 +82,12 @@
                 </form>
             </div>
             <div class="real_time_currency_rate">
-                <h1 id="currency_rate"></h1>
+                <h4 class="currency_rate"></h4>
+                <span class="currency_rate_value"></span>
             </div>
             {% if current_user.is_authenticated %}
             <div class="note_currency_rate">
-                <h4>목표 환율 설정</h4>
+                <h4>Set Target CurrencyRate</h4>
                 <form action="/saveCurrencyRate" method="post" id="currency_save_form">
                     <div class="currency_from">
                         <label for="currency">From currency</label>
@@ -101,7 +103,7 @@
                             id="currencyInput"
                             name="currencyInput"
                             type="text"
-                            placeholder="목표 환율"
+                            placeholder="Target Currency Rate"
                             required="true"
                         />
                     </div>
@@ -109,22 +111,59 @@
                     <button id="save_currency_btn">save currency rate</button>
                 </form>
             </div>
+            {% endif %}
 
+            {% if goalCurrencyList %}
             <div class="currencyNotifiInfo">
                 <h5><b>Your Currency Notification Infofamation List</b></h5>
-                <button id="getCurrencyRateNotiBtn">▼</button>
-                <div class="content">
-                    <h5><b>title</b></h5>
-                    <div>from country</div>
-                    <div>to country</div>
-                    <div>goal currency rate</div>
+                <span id="getCurrencyRateNotiBtn">▼</span>
+                <div class="goalCurrencyList">
+                {% for goalCurrency in goalCurrencyList %}
+                    <div class="content">   
+                        <div>
+                            <form>
+                                <input class="notificationId" value="{{goalCurrency.id}}"></input>
+                                <label>from country</label>
+                                <input class="save_from_country" name="save_from_country" value={{goalCurrency.fromCountry}} readonly></input>
+                                <label>to country</label>
+                                <input class="save_to_country" name="saved_to_country" value={{goalCurrency.toCountry}} readonly></input>
+                                <label>target currency rate</label>
+                                <input class="saved_goal_currency" name="saved_goal_currency" value={{goalCurrency.goalCurrencyRate}} readonly></input>                                                                
+                            </form>        
+                        </div>                     
+                        <div class="btn_group">
+                            <div class="content__btn_group">
+                                <span class="deleteCurrencyRateBtn"><i class='bx bx-trash bx-md'></i></span>
+                                <button class="cancelBtn hidden_Btn">Cancel</button>
+                                <span class="updateCurrencyRateBtn" data-id="{{goalCurrency.id}}"><i class='bx bx-edit-alt bx-md'></i></span>
+                                <button class="saveCurrencyRateBtn hidden_Btn" data-id="{{goalCurrency.id}}">Save</button>                                                        
+                            </div>                            
+                            <div class="subscribe__btn_group">
+                                {% if goalCurrency.isSubscribed == 0 %}
+                                    <span class="subscribeBtn" data-id="{{goalCurrency.id}}"><i class='bx bxs-bell bx-md' ></i></span>
+                                    <span class="unSubscribeBtn hidden_Btn" data-id="{{goalCurrency.id}}"><i class='bx bxs-bell-off bx-md ' ></i></span>
+                                {% endif %}
+                                {% if goalCurrency.isSubscribed == 1 %}
+                                <span class="subscribeBtn hidden_Btn" data-id="{{goalCurrency.id}}"><i class='bx bxs-bell bx-md' ></i></span>
+                                <span class="unSubscribeBtn" data-id="{{goalCurrency.id}}"><i class='bx bxs-bell-off bx-md' ></i></span>
+                                {% endif %}
+                            </div>    
+                            
+                        </div>
+                        
+                        
+                        
+                    </div>
+                {% endfor %}
                 </div>
+                
             </div>
-            {% endif %}
+            {% endif %}    
+            <div class="toast__content hidden-content"></div>        
         </main>
         <script src="{{ url_for('static', filename='country.js') }}"></script>
         <script src="{{ url_for('static', filename='index.js') }}"></script>
-        <script src="{{ url_for('static', filename='apple.js') }}"></script>
+        <!-- <script src="{{ url_for('static', filename='apple.js') }}"></script> -->
         <!-- <script src="{{ url_for('static', filename='module.js') }}"></script> -->
     </body>
 </html>

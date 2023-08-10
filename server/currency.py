@@ -28,11 +28,11 @@ def cal_currency(currency_from, currency_to):
     exchange_rate = exchange.text
     if exchange is not None:
         exchange_rate = exchange.text
-        print(exchange_rate)
+        # print(exchange_rate)
     else:
         exchange_rate = 'Sorry! Exchange rate not found'
-        print(exchange_rate)
+        # print(exchange_rate)
     return exchange_rate
 
 
-cal_currency('nzd', 'cny')
+# cal_currency('nzd', 'cny')

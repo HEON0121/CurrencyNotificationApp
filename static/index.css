@@ -26,6 +26,7 @@ header a {
     text-align: center;
     margin-top: 10px;
 }
+
 #appleid-signin {
     display: none;
 }
@@ -73,8 +74,13 @@ select {
     cursor: pointer;
 }
 
-.currency_rate {
-    font-size: 24px;
+.real_time_currency_rate {
+    display: flex;
+    flex-direction: column;
+}
+.currency_rate,
+.currency_rate_value {
+    font-size: 2.5rem;
     text-align: center;
     margin-bottom: 20px;
 }
@@ -129,15 +135,80 @@ select {
 }
 
 #getCurrencyRateNotiBtn {
-    /* 
-    background-color: #fff;
-    */
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
+    width: 1rem;
+    height: 1rm;
+    font-size: 2rem;
     border: none;
     background-color: transparent;
     border-color: #fff;
     cursor: pointer;
     transition: transform 0.3s;
+}
+
+.rotate {
+    transform: rotate(180deg);
+}
+
+.goalCurrencyList {
+    display: none;
+}
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 4rem;
+}
+
+.btn_group {
+    display: flex;
+    flex-direction: row;
+}
+
+.content__btn_group {
+    color: #fff;
+}
+
+.notificationId {
+    display: none;
+}
+
+.cancelBtn {
+    background-color: red;
+    border-color: red;
+}
+
+.deleteCurrencyRateBtn,
+.updateCurrencyRateBtn {
+    color: #333;
+}
+
+.subscribe__btn_group {
+    color: #333;
+}
+.hidden_Btn {
+    display: none;
+}
+
+.toast__content {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.show-content {
+    display: block;
+}
+
+.show-toast {
+    opacity: 1;
+    transition: 0.5s;
+    visibility: visible;
 }
