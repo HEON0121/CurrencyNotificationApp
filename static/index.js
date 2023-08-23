@@ -409,12 +409,28 @@ saveCurrencyRateBtns.forEach((btn) => {
     btn.addEventListener('click', handleSaveCurrencyRate);
 });
 
-const handleUpdateSubscription = async (isSubscribed, id) => {
-    const data = {
-        is_subscribed: isSubscribed,
-        id: id,
-    };
-    const response = await fetch('/updateSubscription', {
+// subscription info var
+let subscription_json = null;
+let severKey = null;
+
+// set service-worker & subscribe info
+
+function urlB64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
+const updateSubscriptionOnSever = async (data, apiEndPoint) => {
+    console.log('data:::', data);
+    await fetch(apiEndPoint, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -425,12 +441,65 @@ const handleUpdateSubscription = async (isSubscribed, id) => {
         .then((result) => {
             console.log('from update server ::: ', result);
             showSubscriptionToast(result.message, 2000);
-            // location.reload();
         })
         .catch((e) => {
-            // console.log('error : ', e);
+            console.log('error : ', e);
         });
 };
+
+function subscribeUser(swRegistration, applicationServerPublicKey, apiEndPoint, data) {
+    const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
+    swRegistration.pushManager
+        .subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: applicationServerKey,
+        })
+        .then(function (subscription) {
+            console.log('User is subscribed.', JSON.stringify(subscription));
+            // data append
+            data.subscription_json = JSON.stringify(subscription);
+            return updateSubscriptionOnSever(data, apiEndPoint);
+        })
+        .then(function (response) {
+            if (!response.ok) {
+                throw new Error('Bad status code from server.');
+            }
+            return response.json();
+        })
+        .then((result) => {
+            console.log('from update server ::: ', result);
+            showSubscriptionToast(result.message, 2000);
+        })
+        .catch(function (err) {
+            console.log('Failed to subscribe the user: ', err);
+            console.log(err.stack);
+        });
+}
+
+// register service-worker
+
+function registerServiceWorker(serviceWorkerUrl, applicationServerPublicKey) {
+    let swRegistration = null;
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+        console.log('Service Worker and Push is supported');
+
+        navigator.serviceWorker
+            .register(serviceWorkerUrl)
+            .then(function (swReg) {
+                console.log('Service Worker is registered', swReg);
+                subscription_json = swReg;
+                severKey = applicationServerPublicKey;
+                swRegistration = swReg;
+            })
+            .catch(function (error) {
+                console.error('Service Worker Error', error);
+            });
+    } else {
+        console.warn('Push messaging is not supported');
+    }
+    return swRegistration;
+}
+
 // subscription : 1 unsubscription : 0
 // show subscription toast
 const showSubscriptionToast = (msg, duration) => {
@@ -441,6 +510,15 @@ const showSubscriptionToast = (msg, duration) => {
         toast__content.classList.remove('show-toast');
     }, duration);
 };
+
+const handleUpdateSubscription = (isSubscribed, id) => {
+    const data = {
+        is_subscribed: isSubscribed,
+        id: id,
+    };
+    subscribeUser(subscription_json, severKey, '/updateSubscription', data);
+};
+
 // subscribe Btn
 subscribeBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => {
@@ -465,21 +543,3 @@ unSubscribeBtns.forEach((btn) => {
         handleUpdateSubscription(isSubscribed, id);
     });
 });
-// service-worker
-
-document.addEventListener('DOMContentLoaded', async () => {
-    if ('serviceWorker' in navigator) {
-        try {
-            const registration = await navigator.serviceWorker.register('/service-worker.js');
-            console.log('Service Worker registered with scope:', registration.scope);
-        } catch (error) {
-            console.error('Service Worker registration failed:', error);
-        }
-    }
-});
-// notification
-// createNotification();
-// const createNotification = () => {
-//     let notification = new Notification('', {});
-//     Notification.permission;
-// };

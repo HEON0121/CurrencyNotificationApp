@@ -1,10 +1,11 @@
-from flask import Flask, request, redirect, jsonify, render_template, url_for, session
+from flask import Flask, request, redirect, jsonify, render_template, url_for, session, current_app
 from flask_login import LoginManager, current_user, login_user, logout_user
 from server.currency import cal_currency
 from server.dao import CurrencyNotification, User
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.schedulers.base import STATE_RUNNING
 from dotenv import dotenv_values
+from server.web_push_handler import trigger_push_notification
 
 import decimal
 import google_auth_oauthlib.flow
@@ -21,7 +22,8 @@ SCOPES = ['openid', 'https://www.googleapis.com/auth/userinfo.email']
 API_SERVICE_NAME = 'drive'
 API_VERSION = 'v2'
 
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=True)
+app.config.from_pyfile('application.cfg.py')
 app.secret_key = SECRET_KEY
 
 login_manager = LoginManager()
@@ -41,13 +43,20 @@ def load_user(user_Id):
 
 @app.route('/')
 def index():
+    # 하드 코딩
+    user = User('100460290688182393005', 'seheon.emma@gmail.com')
+    remember = True
+    duration = None
+    force = True
+    fresh = True
+    login_user(user, remember, duration, force, fresh)
     if current_user.is_authenticated:
         global session_id
         session_id = current_user.id
         goalCurrencyList = getGoalCurrencyRateList(session_id)
         # check currency rate scheduler
         global scheduler
-        scheduler.add_job(scheduled_job, 'interval', minutes=1)
+        scheduler.add_job(scheduled_job, 'interval', minutes=15)
         if scheduler.state != STATE_RUNNING:
             scheduler.start()
         return render_template("index.html", current_user=current_user, goalCurrencyList=goalCurrencyList)
@@ -85,7 +94,7 @@ def authorized():
         service = googleapiclient.discovery.build(
             'oauth2', 'v2', credentials=credentials)
         user_info = service.userinfo().get().execute()
-
+        # print(f'user_info:::{user_info}')
         if user_info.get("verified_email"):
             users_email = user_info.get('email')
             unique_id = user_info.get('id')
@@ -100,6 +109,7 @@ def authorized():
         if not User.getUser(unique_id):
             User.insertUser(unique_id, users_email)
         session['credentials'] = credentials_to_dict(credentials)
+
         login_user(user)
         # save session
         global session_id
@@ -147,7 +157,8 @@ def check_currency_rate(id):
             toCountry = goal['toCountry']
 
             currencyRate = cal_currency(fromCountry, toCountry)
-
+            title = "exchange rate Notification"
+            subscription_json = goal['subscription_json']
             # Cut the last three characters of the text representing the currency code
             currencyRate = currencyRate[:-3]
             # print(f'from check_scheduler:::{currencyRate}')
@@ -155,12 +166,15 @@ def check_currency_rate(id):
             targetCurrencyRate = decimal.Decimal(
                 str(targetCurrencyRate).replace(',', ''))
             if targetCurrencyRate == currencyRate:
-                print("target goal in!!")
+                body = "target goal in!!"
+                if subscription_json is not None:
+                    trigger_push_notification(subscription_json, title, body)
             elif is_within_tolerance(targetCurrencyRate, currencyRate):
-                print(
-                    "The target exchange rate and the current exchange rate are within +-0.5!!")
+                body = f"{fromCountry}-{toCountry} \n The target exchange rate and the current exchange rate are within +-0.5!!"
+                if subscription_json is not None:
+                    trigger_push_notification(subscription_json, title, body)
             else:
-                print('not yet')
+                print(f'not yet {goalList.__len__}')
 
 
 def scheduled_job():
@@ -216,7 +230,8 @@ def getGoalCurrencyRateList(id):
                 'fromCountry': notification.fromCountry,
                 'toCountry': notification.toCountry,
                 'goalCurrencyRate': notification.goalCurrencyRate,
-                'isSubscribed': notification.isSubscribed
+                'isSubscribed': notification.isSubscribed,
+                'subscription_json': notification.subscription_json
             })
 
         return currencyData
@@ -269,28 +284,27 @@ def updateTargetCurrency():
         return jsonify({'message': 'update failed'})
 
 
+# update subscription
 @app.route('/updateSubscription', methods=["PUT"])
 def updateSubscribed():
     isSubscribed = request.json.get('is_subscribed')
     id = request.json.get('id')
-    if CurrencyNotification.updateSubscribed(isSubscribed, id) > 0:
+    subscription_json = request.json.get('subscription_json')
+    print(subscription_json)
+    if CurrencyNotification.updateSubscribed(isSubscribed, subscription_json, id) > 0:
         if isSubscribed == 1:
             return jsonify({'message': 'Subscribed'})
         if isSubscribed == 0:
             return jsonify({'message': 'unSubscribed'})
     else:
-        return jsonify({'message': 'update failed'})
-# create Notification
-
-
-# @app.route("/createNotification", method=["GET"])
-# def createNotification():
-#     return ''
+        return jsonify({'message': 'update Subscrition failed'})
 
 
 if __name__ == '__main__':
 
-    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    context.load_cert_chain('localhost.pem', 'localhost-key.pem')
+    # context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    # context.load_cert_chain('localhost.pem', 'localhost-key.pem')
 
-    app.run(ssl_context=context, debug=True)
+    # app.run(ssl_context=context, debug=True)
+    app.run(debug=True, port=5000)
+    # app.run(debug=True, ssl_context='adhoc')

@@ -2,7 +2,10 @@
 secret.json
 # ssl 
 localhost-key.pem
-
 localhost.pem
-
+# env
 .env
+# app config
+/instance/application.cfg.py
+# fcm
+service_account.json

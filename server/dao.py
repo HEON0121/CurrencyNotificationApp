@@ -117,7 +117,7 @@ class User(UserMixin):
 
 
 class CurrencyNotification():
-    def __init__(self, _id, _userId, _userEmail, _fromCountry, _toCountry, _goalCurrencyRate, _isSubscribed):
+    def __init__(self, _id, _userId, _userEmail, _fromCountry, _toCountry, _goalCurrencyRate, _isSubscribed, _subscription_json):
         self.id = _id
         self.userId = _userId
         self.userEmail = _userEmail
@@ -125,6 +125,7 @@ class CurrencyNotification():
         self.toCountry = _toCountry
         self.goalCurrencyRate = _goalCurrencyRate
         self.isSubscribed = _isSubscribed
+        self.subscription_json = _subscription_json
 
     @staticmethod
     def getGoalCurrency(user_Id):
@@ -144,7 +145,7 @@ class CurrencyNotification():
                             _toCountry=row[4],
                             _goalCurrencyRate=row[5],
                             _isSubscribed=row[6],
-
+                            _subscription_json=row[7],
                         )
                         currencyNotifications.append(currencyNotification)
                     return currencyNotifications
@@ -159,7 +160,8 @@ class CurrencyNotification():
                            user_email,
                            from_country,
                            to_country,
-                           goal_currency):
+                           goal_currency
+                           ):
         try:
             with db.cursor() as cursor:
                 sql = '''insert 
@@ -169,7 +171,7 @@ class CurrencyNotification():
                         user_email,
                         from_country, 
                         to_country, 
-                        goal_currency_rate                
+                        goal_currency_rate              
                     ) 
                     values
                     (
@@ -177,14 +179,15 @@ class CurrencyNotification():
                         %s,
                         %s,
                         %s,
-                        %s
+                        %s       
                     )'''
 
                 cursor.execute(sql, (user_Id,
                                      user_email,
                                      from_country,
                                      to_country,
-                                     goal_currency))
+                                     goal_currency,
+                                     ))
                 db.commit()
                 inserted_id = cursor.lastrowid
                 return inserted_id
@@ -217,11 +220,12 @@ class CurrencyNotification():
             print(traceback.format_exc())
 
     @staticmethod
-    def updateSubscribed(isSubscribed, id):
+    def updateSubscribed(isSubscribed, subscription_json, id):
         try:
             with db.cursor() as cursor:
-                sql = "update currency_rate_notification set is_Subscribed = %s where notification_Id=%s"
-                updated_row = cursor.execute(sql, (isSubscribed, id))
+                sql = "update currency_rate_notification set is_Subscribed = %s, subscription_json = %s where notification_Id=%s"
+                updated_row = cursor.execute(
+                    sql, (isSubscribed, subscription_json, id))
                 if updated_row > 0:
                     db.commit()
                 return updated_row

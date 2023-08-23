@@ -14,7 +14,8 @@
         <meta name="appleid-signin-nonce" content="[NONCE]" />
         <meta name="appleid-signin-use-popup" content="true" /> -->
         <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" />
-        <title>currency rate notification</title>
+        <title>currency rate notification</title>        
+        <!-- <script defer type="text/javascript" src="{{ url_for('static', filename='messaging_get_token.js')}}"></script> -->        
     </head>
     <body>
         <header>
@@ -161,9 +162,10 @@
             {% endif %}    
             <div class="toast__content hidden-content"></div>        
         </main>
-        <script src="{{ url_for('static', filename='country.js') }}"></script>
-        <script src="{{ url_for('static', filename='index.js') }}"></script>
-        <!-- <script src="{{ url_for('static', filename='apple.js') }}"></script> -->
-        <!-- <script src="{{ url_for('static', filename='module.js') }}"></script> -->
+        <script type="text/javascript" src="{{ url_for('static', filename='country.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>        
+        <script type="text/javascript">
+            registerServiceWorker('/static/service_worker.js', "{{config['VAPID_PUBLIC_KEY']}}");
+        </script>                
     </body>
 </html>
