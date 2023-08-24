@@ -2,6 +2,23 @@ import pymysql
 import traceback
 from dotenv import dotenv_values
 from flask_login import UserMixin
+import os
+import logging
+
+# logging file directory root
+log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs')
+
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+
+# setting logging
+logging.basicConfig(
+    level=logging.ERROR,
+    filename=os.path.join(log_dir, 'error.log'),
+    filemode='a',
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+
 env_vars = dotenv_values(".env")
 
 db = pymysql.connect(
@@ -32,7 +49,9 @@ class Session():
                 else:
                     return None
         except Exception as e:
-            print(traceback.format_exc())
+            logging.error(
+                "An error occurred while getting session for user %s.", user_Id)
+            logging.error(traceback.format_exc())
             return None
 
     @staticmethod
@@ -53,7 +72,9 @@ class Session():
                 inserted_id = cursor.lastrowid
                 return inserted_id
         except Exception as e:
-            print(traceback.format_exc())
+            logging.error(
+                "An error occurred while inserting session for user %s.", user_Id)
+            logging.error(traceback.format_exc())
             return None
 
     @staticmethod
@@ -64,7 +85,9 @@ class Session():
                 cursor.execute(sql, (user_Id,))
                 db.commit()
         except Exception as e:
-            print(traceback.format_exc())
+            logging.error(
+                "An error occurred while deleting session for user %s.", user_Id)
+            logging.error(traceback.format_exc())
             return None
 
 
@@ -90,7 +113,9 @@ class User(UserMixin):
                 else:
                     return None
         except Exception as e:
-            print(f"Error occurred: {str(e)}")
+            logging.error(
+                "An error occurred while getting user info for user %s.", user_Id)
+            logging.error(traceback.format_exc())
             return None
 
     @staticmethod
@@ -107,13 +132,17 @@ class User(UserMixin):
                 %s,
                 %s            
             )'''
-        cursor = db.cursor()
-        cursor.execute(sql, (user_Id,
-                             user_email))
-        db.commit()
-        db.close()
-        inserted_id = cursor.lastrowid
-        return inserted_id
+        try:
+            with db.cursor() as cursor:
+                cursor.execute(sql, (user_Id, user_email))
+                db.commit()
+                inserted_id = cursor.lastrowid
+                return inserted_id
+        except Exception as e:
+            logging.error(
+                "An error occurred while inserting user info for user user id : %s, user email : %s.", user_Id, user_email)
+            logging.error(traceback.format_exc())
+            return None
 
 
 class CurrencyNotification():
@@ -152,7 +181,9 @@ class CurrencyNotification():
                 else:
                     return None
         except Exception as e:
-            print(traceback.format_exc())
+            logging.error(
+                "An error occurred while getting user currency info for user id : %s", user_Id)
+            logging.error(traceback.format_exc())
             return None
 
     @staticmethod
@@ -192,7 +223,9 @@ class CurrencyNotification():
                 inserted_id = cursor.lastrowid
                 return inserted_id
         except Exception as e:
-            print(traceback.format_exc())
+            logging.error(
+                "An error occurred while inserting user currency info for user id : %s", user_Id)
+            logging.error(traceback.format_exc())
             return None
 
     @staticmethod
@@ -205,7 +238,9 @@ class CurrencyNotification():
                     db.commit()
                 return deleted_row
         except Exception as e:
-            print(traceback.format_exc())
+            logging.error(
+                "An error occurred while deleting user currency info delete node id : %s", id)
+            logging.error(traceback.format_exc())
 
     @staticmethod
     def updateGoalCurrency(targetCurrency, id):
@@ -217,7 +252,9 @@ class CurrencyNotification():
                     db.commit()
                 return updated_row
         except Exception as e:
-            print(traceback.format_exc())
+            logging.error(
+                "An error occurred while updating user currency info update node id : %s", id)
+            logging.error(traceback.format_exc())
 
     @staticmethod
     def updateSubscribed(isSubscribed, subscription_json, id):
@@ -230,4 +267,6 @@ class CurrencyNotification():
                     db.commit()
                 return updated_row
         except Exception as e:
-            print(traceback.format_exc())
+            logging.error(
+                "An error occurred while updating user subscrition info update node id : %s", id)
+            logging.error(traceback.format_exc())

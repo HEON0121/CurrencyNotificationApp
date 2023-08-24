@@ -19,6 +19,7 @@ const saveCurrencyRateBtns = document.querySelectorAll('.saveCurrencyRateBtn');
 const cancelBtns = document.querySelectorAll('.cancelBtn');
 const subscribeBtns = document.querySelectorAll('.subscribeBtn');
 const unSubscribeBtns = document.querySelectorAll('.unSubscribeBtn');
+const targetCurrencyListSize = document.querySelector('.targetCurrencyListSize');
 let from_currency = '';
 let to_currency = '';
 
@@ -283,6 +284,11 @@ currencyInput.addEventListener('input', function () {
 // save Target Currency
 const handleSaveTargetCurrency = (e) => {
     e.preventDefault();
+    if (targetCurrencyListSize.getAttribute('data-id') >= 4) {
+        let warn_message = document.querySelector('.warn_message');
+        warn_message.textContent = 'You can save up to 4 exchange rates.';
+        return false;
+    }
     let currency_save_form = document.getElementById('currency_save_form');
     let currency_Input = currency_save_form.currencyInput.value;
 
@@ -324,11 +330,10 @@ getCurrencyRateNotiBtn.addEventListener('click', function () {
 const handleDeleteTargetCurrency = async (e) => {
     const content = e.target.closest('.content');
     let id = content.querySelector('.notificationId').value;
-    console.log(id);
-    const response = await fetch(`/deleteCurrencyNotification/${id}`, { method: 'DELETE' });
-    if (response.ok) {
-        console.log(response);
-        content.remove();
+    //console.log(iargetCurrencyListSize.getAttribute('data-id');
+        listsize = Number(listsize);
+        targetCurrencyListSize.textContent = listsize - 1;
+        targetCurrencyListSize.setAttribute('data-id', listsize - 1);
     }
 };
 deleteCurrencyRateBtns.forEach((btn) => {
@@ -398,7 +403,7 @@ const handleSaveCurrencyRate = async (e) => {
     })
         .then((response) => response.json())
         .then((result) => {
-            console.log('from update server ::: ', result);
+            //console.log('from update server ::: ', result);
             location.reload();
         })
         .catch((e) => {
@@ -429,7 +434,7 @@ function urlB64ToUint8Array(base64String) {
 }
 
 const updateSubscriptionOnSever = async (data, apiEndPoint) => {
-    console.log('data:::', data);
+    //console.log('data:::', data);
     await fetch(apiEndPoint, {
         method: 'PUT',
         headers: {
@@ -439,7 +444,7 @@ const updateSubscriptionOnSever = async (data, apiEndPoint) => {
     })
         .then((response) => response.json())
         .then((result) => {
-            console.log('from update server ::: ', result);
+            //console.log('from update server ::: ', result);
             showSubscriptionToast(result.message, 2000);
         })
         .catch((e) => {
@@ -455,19 +460,13 @@ function subscribeUser(swRegistration, applicationServerPublicKey, apiEndPoint, 
             applicationServerKey: applicationServerKey,
         })
         .then(function (subscription) {
-            console.log('User is subscribed.', JSON.stringify(subscription));
+            //console.log('User is subscribed.', JSON.stringify(subscription));
             // data append
             data.subscription_json = JSON.stringify(subscription);
             return updateSubscriptionOnSever(data, apiEndPoint);
         })
-        .then(function (response) {
-            if (!response.ok) {
-                throw new Error('Bad status code from server.');
-            }
-            return response.json();
-        })
         .then((result) => {
-            console.log('from update server ::: ', result);
+            //console.log('from update server ::: ', result);
             showSubscriptionToast(result.message, 2000);
         })
         .catch(function (err) {

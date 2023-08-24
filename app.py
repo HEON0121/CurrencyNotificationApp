@@ -11,6 +11,23 @@ import decimal
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import ssl
+import traceback
+import os
+import logging
+
+# logging file directory root
+log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs')
+
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+
+# setting logging
+logging.basicConfig(
+    level=logging.ERROR,
+    filename=os.path.join(log_dir, 'error.log'),
+    filemode='a',
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 env_vars = dotenv_values(".env")
 SECRET_KEY = env_vars.get('SECRET_KEY')
@@ -34,6 +51,8 @@ scheduler = BackgroundScheduler(daemon=False)
 
 # session id
 session_id = None
+# target currency list
+goalCurrencyList = None
 
 
 @login_manager.user_loader
@@ -53,10 +72,11 @@ def index():
     if current_user.is_authenticated:
         global session_id
         session_id = current_user.id
+        global goalCurrencyList
         goalCurrencyList = getGoalCurrencyRateList(session_id)
         # check currency rate scheduler
         global scheduler
-        scheduler.add_job(scheduled_job, 'interval', minutes=15)
+        scheduler.add_job(scheduled_job, 'interval', minutes=10)
         if scheduler.state != STATE_RUNNING:
             scheduler.start()
         return render_template("index.html", current_user=current_user, goalCurrencyList=goalCurrencyList)
@@ -119,7 +139,8 @@ def authorized():
 
         return redirect(url_for('index'))
     except Exception as e:
-        print(f"Error occurred: {e.args}")
+        logging.error(traceback.format_exc())
+        logging.error(f"login callback Error occurred: {e.args}")
 
     return redirect(url_for('index'))
 
@@ -144,9 +165,9 @@ def is_within_tolerance(target_rate, current_rate, tolerance=0.5):
     return diff <= tolerance
 
 
-def check_currency_rate(id):
-
-    goalList = getGoalCurrencyRateList(id)
+def check_currency_rate():
+    global goalCurrencyList
+    goalList = goalCurrencyList
     for goal in goalList:
         if goal['isSubscribed'] == 1:
             # goal currency
@@ -166,21 +187,18 @@ def check_currency_rate(id):
             targetCurrencyRate = decimal.Decimal(
                 str(targetCurrencyRate).replace(',', ''))
             if targetCurrencyRate == currencyRate:
-                body = "target goal in!!"
+                body = f"{fromCountry}-{toCountry} current exchange rate : {currencyRate}{' '}{toCountry} Target exchange rate achieved!"
                 if subscription_json is not None:
                     trigger_push_notification(subscription_json, title, body)
             elif is_within_tolerance(targetCurrencyRate, currencyRate):
-                body = f"{fromCountry}-{toCountry} \n The target exchange rate and the current exchange rate are within +-0.5!!"
+                body = f"{fromCountry}-{toCountry} current exchange rate : {currencyRate}{' '}{toCountry} \n The target exchange rate and the current exchange rate are within 0.5!"
                 if subscription_json is not None:
                     trigger_push_notification(subscription_json, title, body)
-            else:
-                print(f'not yet {goalList.__len__}')
 
 
 def scheduled_job():
     with app.app_context():
-        global session_id
-        check_currency_rate(session_id)
+        check_currency_rate()
 
 
 # check currenidcy rate scheduler
@@ -244,8 +262,7 @@ def saveTargetCurrencyRate():
     currency_from = request.form.get('save_from_country')
     currency_to = request.form.get('save_to_country')
     currencyInput = request.form.get('currencyInput')
-    print(
-        f'save currency_from: {currency_from} / save currency_to: {currency_to} / currencyInput: {currencyInput}')
+
     CurrencyNotification.insertGoalCurrency(current_user.id,
                                             current_user.email,
                                             currency_from,
@@ -290,7 +307,7 @@ def updateSubscribed():
     isSubscribed = request.json.get('is_subscribed')
     id = request.json.get('id')
     subscription_json = request.json.get('subscription_json')
-    print(subscription_json)
+    # print(subscription_json)
     if CurrencyNotification.updateSubscribed(isSubscribed, subscription_json, id) > 0:
         if isSubscribed == 1:
             return jsonify({'message': 'Subscribed'})

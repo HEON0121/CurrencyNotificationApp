@@ -111,6 +111,9 @@ select {
     color: #fff;
 }
 
+.warn_message {
+    color: red;
+}
 .notification_btn,
 #save_currency_btn {
     padding: 10px 20px;

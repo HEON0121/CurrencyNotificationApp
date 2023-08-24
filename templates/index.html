@@ -109,6 +109,7 @@
                         />
                     </div>
                     <!-- <button id="notificationBtn">알림 허용</button> -->
+                    <span class="warn_message"></span>
                     <button id="save_currency_btn">save currency rate</button>
                 </form>
             </div>
@@ -117,6 +118,7 @@
             {% if goalCurrencyList %}
             <div class="currencyNotifiInfo">
                 <h5><b>Your Currency Notification Infofamation List</b></h5>
+                <h4><span class="targetCurrencyListSize" data-id="{{ goalCurrencyList|length }}">{{ goalCurrencyList|length }}</span>/4</h4>
                 <span id="getCurrencyRateNotiBtn">▼</span>
                 <div class="goalCurrencyList">
                 {% for goalCurrency in goalCurrencyList %}
