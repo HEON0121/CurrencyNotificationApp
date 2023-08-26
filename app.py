@@ -62,13 +62,13 @@ def load_user(user_Id):
 
 @app.route('/')
 def index():
-    # 하드 코딩
-    user = User('100460290688182393005', 'seheon.emma@gmail.com')
-    remember = True
-    duration = None
-    force = True
-    fresh = True
-    login_user(user, remember, duration, force, fresh)
+
+    # user = User('id', 'email')
+    # remember = True
+    # duration = None
+    # force = True
+    # fresh = True
+    # login_user(user, remember, duration, force, fresh)
     if current_user.is_authenticated:
         global session_id
         session_id = current_user.id
