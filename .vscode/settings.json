@@ -1,9 +1,9 @@
 {
-    "python.analysis.extraPaths": [
-        "./server"
-    ],
+    "python.analysis.extraPaths": ["./server"],
     "[python]": {
         "editor.defaultFormatter": "ms-python.autopep8"
     },
-    "python.formatting.provider": "none"
+    "python.formatting.provider": "none",
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/bcde32bc-4d5e-48b7-a1d5-01de1aa643bb/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/currency-notification-webapp",
+    "appService.deploySubpath": "."
 }

@@ -1,8 +1,6 @@
-import random
-import string
+import secrets
 
 
 def generate_secret_key(length=32):
-    chars = string.ascii_letters + string.digits + string.punctuation
-    secret_key = ''.join(random.choice(chars) for _ in range(length))
+    secret_key = secrets.token_hex()
     return secret_key
