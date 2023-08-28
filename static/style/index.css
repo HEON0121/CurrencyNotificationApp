@@ -16,6 +16,11 @@ header h1 {
     margin: 0;
 }
 
+header a img {
+    width: 191px;
+    height: 46px;
+}
+
 header p {
     text-align: center;
     margin: 0;
@@ -30,6 +35,7 @@ header a {
 #appleid-signin {
     display: none;
 }
+
 main {
     display: flex;
     flex-direction: column;
@@ -37,6 +43,17 @@ main {
     padding: 20px;
 }
 
+footer {
+    background-color: #333;
+    padding: 10px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+footer p {
+    margin-top: 10px;
+    text-align: center;
+}
 form {
     display: flex;
     flex-direction: column;
@@ -64,6 +81,11 @@ select {
 .currency_from,
 .currency_to {
     margin-bottom: 10px;
+}
+
+#switchBtn img {
+    width: 16px;
+    height: 16px;
 }
 
 #currency_cal_btn {

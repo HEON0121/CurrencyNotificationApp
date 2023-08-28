@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, jsonify, render_template, url_for, session, current_app
+from flask import Flask, request, redirect, jsonify, render_template, url_for, session
 from flask_login import LoginManager, current_user, login_user, logout_user
 from server.currency import cal_currency
 from server.dao import CurrencyNotification, User

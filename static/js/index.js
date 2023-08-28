@@ -194,21 +194,25 @@ const switchCountry = (e) => {
     from_country.value = from;
     to_country.value = to;
 
-    if (save_from_country.firstChild) {
-        save_from_country.replaceChildren();
+    if (save_from_country) {
+        if (save_from_country.firstChild) {
+            save_from_country.replaceChildren();
+        }
+        let fromOption = document.createElement('option');
+        fromOption.value = from;
+        fromOption.append(from);
+        save_from_country.append(fromOption);
     }
-    let fromOption = document.createElement('option');
-    fromOption.value = from;
-    fromOption.append(from);
-    save_from_country.append(fromOption);
 
-    if (save_to_country.firstChild) {
-        save_to_country.replaceChildren();
+    if (save_to_country) {
+        if (save_to_country.firstChild) {
+            save_to_country.replaceChildren();
+        }
+        let toOption = document.createElement('option');
+        toOption.value = to;
+        toOption.append(to);
+        save_to_country.append(toOption);
     }
-    let toOption = document.createElement('option');
-    toOption.value = to;
-    toOption.append(to);
-    save_to_country.append(toOption);
 
     updateCurrencyRate();
 };
@@ -331,10 +335,9 @@ const handleDeleteTargetCurrency = async (e) => {
     const content = e.target.closest('.content');
     let id = content.querySelector('.notificationId').value;
     //console.log(iargetCurrencyListSize.getAttribute('data-id');
-        listsize = Number(listsize);
-        targetCurrencyListSize.textContent = listsize - 1;
-        targetCurrencyListSize.setAttribute('data-id', listsize - 1);
-    }
+    listsize = Number(listsize);
+    targetCurrencyListSize.textContent = listsize - 1;
+    targetCurrencyListSize.setAttribute('data-id', listsize - 1);
 };
 deleteCurrencyRateBtns.forEach((btn) => {
     btn.addEventListener('click', handleDeleteTargetCurrency);
@@ -415,8 +418,8 @@ saveCurrencyRateBtns.forEach((btn) => {
 });
 
 // subscription info var
-let subscription_json = null;
-let severKey = null;
+// let subscription_json = null;
+// let severKey = null;
 
 // set service-worker & subscribe info
 

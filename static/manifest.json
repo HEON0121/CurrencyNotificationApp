@@ -1,0 +1,28 @@
+{
+    "name": "Currency Notification",
+    "short_name": "Currency Notification",
+    "icons": [
+        {
+            "src": "/static/icons/currency.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "/static/icons/exchange.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "portrait",
+    "theme_color": "#fff",
+    "background_color": "#333",
+    "prefer_related_applications": true,
+    "related_applications": [
+        {
+            "platform": "play",
+            "id": "com.google.samples.apps.iosched"
+        }
+    ]
+}

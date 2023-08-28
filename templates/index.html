@@ -1,173 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css" />
-        <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' />
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
-        <!-- <meta name="appleid-signin-client-id" content="[CLIENT_ID]" />
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Set your target exchange rates and subscribe it to track the target exchange rates">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css" />
+    <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+    <!-- <meta name="appleid-signin-client-id" content="[CLIENT_ID]" />
         <meta name="appleid-signin-scope" content="[SCOPES]" />
         <meta name="appleid-signin-redirect-uri" content="[REDIRECT_URI]" />
         <meta name="appleid-signin-state" content="[STATE]" />
         <meta name="appleid-signin-nonce" content="[NONCE]" />
         <meta name="appleid-signin-use-popup" content="true" /> -->
-        <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" />
-        <title>currency rate notification</title>        
-        <!-- <script defer type="text/javascript" src="{{ url_for('static', filename='messaging_get_token.js')}}"></script> -->        
-    </head>
-    <body>
-        <header>
-            <h1>Currency Notification</h1>
-            <!-- <script
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/index.css') }}" />
+    <title>currency rate notification</title>
+</head>
+
+<body>
+    <header>
+        <h1>Currency Notification</h1>
+        <!-- <script
                 type="text/javascript"
                 src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"
             ></script>             -->
-            <!-- <div id="appleid-signin" data-color="black" data-border="true" data-type="sign in"></div> -->
-            {% if not current_user.is_authenticated %}
-                <a href="/google-login">
-                    <img
-                        src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png"
-                        alt="Google Sign-In"
-                    />
-                </a>                        
-            {% else %}
-            <!-- <p>Hello, {{ current_user.name }}!</p> -->
-            <p>{{ current_user.picture }}</p>
-            <p>Logged in as {{ current_user.email }}</p>
-            <a href="{{ url_for('logout') }}">Logout</a>
-            {% endif %}
-        </header>
-        <main>
-            <div class="from_country_grp">
-                <form action="#">
-                    <label for="country_group">From country group</label>
-                    <select class="from_country_group" name="country_group">
-                        <option value="select">Select a Group</option>
-                        <option value="Asia">Asia</option>
-                        <option value="America">America</option>
-                        <option value="Oceania">Oceania</option>
-                        <option value="Euro">Euro</option>
-                    </select>
-                </form>
-            </div>
-            <div class="to_country_grp">
-                <form action="#">
-                    <label for="country_group">To country group</label>
-                    <select class="to_country_group" name="country_group">
-                        <option value="select">Select a Group</option>
-                        <option value="Asia">Asia</option>
-                        <option value="America">America</option>
-                        <option value="Oceania">Oceania</option>
-                        <option value="Euro">Euro</option>
-                    </select>
-                </form>
-            </div>
-            <div class="currency_main">
-                <form action="/getCurrencyRate" method="get" id="currency_main_form">
-                    <div class="currency_from">
-                        <label for="currency">From currency</label>
-                        <select class="from_country" name="currency_from"></select>
-                    </div>
-                    <button id="switchBtn">
-                        <img src="/static/exchange.png" alt="exchange" />
-                    </button>
-                    <div class="currency_to">
-                        <label for="currency">To currency</label>
-                        <select class="to_country" name="currency_to"></select>
-                    </div>
-                    <div class="currency_cal">
-                        <button id="currency_cal_btn">Calculate CurrencyRate</button>
-                    </div>
-                </form>
-            </div>
-            <div class="real_time_currency_rate">
-                <h4 class="currency_rate"></h4>
-                <span class="currency_rate_value"></span>
-            </div>
-            {% if current_user.is_authenticated %}
-            <div class="note_currency_rate">
-                <h4>Set Target CurrencyRate</h4>
-                <form action="/saveCurrencyRate" method="post" id="currency_save_form">
-                    <div class="currency_from">
-                        <label for="currency">From currency</label>
-                        <select class="save_from_country" name="save_from_country" disabled></select>
-                    </div>
-                    <div class="currency_to">
-                        <label for="currency">To currency</label>
-                        <select class="save_to_country" name="save_to_country" disabled></select>
-                    </div>
-                    <div class="input_note_currency">
-                        <h5><b>Input CurrencyRate</b></h5>
-                        <input
-                            id="currencyInput"
-                            name="currencyInput"
-                            type="text"
-                            placeholder="Target Currency Rate"
-                            required="true"
-                        />
-                    </div>
-                    <!-- <button id="notificationBtn">알림 허용</button> -->
-                    <span class="warn_message"></span>
-                    <button id="save_currency_btn">save currency rate</button>
-                </form>
-            </div>
-            {% endif %}
-
-            {% if goalCurrencyList %}
-            <div class="currencyNotifiInfo">
-                <h5><b>Your Currency Notification Infofamation List</b></h5>
-                <h4><span class="targetCurrencyListSize" data-id="{{ goalCurrencyList|length }}">{{ goalCurrencyList|length }}</span>/4</h4>
-                <span id="getCurrencyRateNotiBtn">▼</span>
-                <div class="goalCurrencyList">
-                {% for goalCurrency in goalCurrencyList %}
-                    <div class="content">   
-                        <div>
-                            <form>
-                                <input class="notificationId" value="{{goalCurrency.id}}"></input>
-                                <label>from country</label>
-                                <input class="save_from_country" name="save_from_country" value={{goalCurrency.fromCountry}} readonly></input>
-                                <label>to country</label>
-                                <input class="save_to_country" name="saved_to_country" value={{goalCurrency.toCountry}} readonly></input>
-                                <label>target currency rate</label>
-                                <input class="saved_goal_currency" name="saved_goal_currency" value={{goalCurrency.goalCurrencyRate}} readonly></input>                                                                
-                            </form>        
-                        </div>                     
-                        <div class="btn_group">
-                            <div class="content__btn_group">
-                                <span class="deleteCurrencyRateBtn"><i class='bx bx-trash bx-md'></i></span>
-                                <button class="cancelBtn hidden_Btn">Cancel</button>
-                                <span class="updateCurrencyRateBtn" data-id="{{goalCurrency.id}}"><i class='bx bx-edit-alt bx-md'></i></span>
-                                <button class="saveCurrencyRateBtn hidden_Btn" data-id="{{goalCurrency.id}}">Save</button>                                                        
-                            </div>                            
-                            <div class="subscribe__btn_group">
-                                {% if goalCurrency.isSubscribed == 0 %}
-                                    <span class="subscribeBtn" data-id="{{goalCurrency.id}}"><i class='bx bxs-bell bx-md' ></i></span>
-                                    <span class="unSubscribeBtn hidden_Btn" data-id="{{goalCurrency.id}}"><i class='bx bxs-bell-off bx-md ' ></i></span>
-                                {% endif %}
-                                {% if goalCurrency.isSubscribed == 1 %}
-                                <span class="subscribeBtn hidden_Btn" data-id="{{goalCurrency.id}}"><i class='bx bxs-bell bx-md' ></i></span>
-                                <span class="unSubscribeBtn" data-id="{{goalCurrency.id}}"><i class='bx bxs-bell-off bx-md' ></i></span>
-                                {% endif %}
-                            </div>    
-                            
-                        </div>
-                        
-                        
-                        
-                    </div>
-                {% endfor %}
+        <!-- <div id="appleid-signin" data-color="black" data-border="true" data-type="sign in"></div> -->
+        {% if not current_user.is_authenticated %}
+        <a href="/google-login">
+            <img src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png"
+                alt="Google Sign-In" />
+        </a>
+        {% else %}
+        <!-- <p>Hello, {{ current_user.name }}!</p> -->
+        <p>{{ current_user.picture }}</p>
+        <p>Logged in as {{ current_user.email }}</p>
+        <a href="{{ url_for('logout') }}">Logout</a>
+        {% endif %}
+    </header>
+    <main>
+        <div class="from_country_grp">
+            <form action="#">
+                <label for="country_group">From country group</label>
+                <select class="from_country_group" name="country_group">
+                    <option value="select">Select a Group</option>
+                    <option value="Asia">Asia</option>
+                    <option value="America">America</option>
+                    <option value="Oceania">Oceania</option>
+                    <option value="Euro">Euro</option>
+                </select>
+            </form>
+        </div>
+        <div class="to_country_grp">
+            <form action="#">
+                <label for="country_group">To country group</label>
+                <select class="to_country_group" name="country_group">
+                    <option value="select">Select a Group</option>
+                    <option value="Asia">Asia</option>
+                    <option value="America">America</option>
+                    <option value="Oceania">Oceania</option>
+                    <option value="Euro">Euro</option>
+                </select>
+            </form>
+        </div>
+        <div class="currency_main">
+            <form action="/getCurrencyRate" method="get" id="currency_main_form">
+                <div class="currency_from">
+                    <label for="currency">From currency</label>
+                    <select class="from_country" name="currency_from"></select>
                 </div>
-                
+                <button id="switchBtn">
+                    <img src="/static/icons/exchange.png" alt="exchange" />
+                </button>
+                <div class="currency_to">
+                    <label for="currency">To currency</label>
+                    <select class="to_country" name="currency_to"></select>
+                </div>
+                <div class="currency_cal">
+                    <button id="currency_cal_btn">Calculate CurrencyRate</button>
+                </div>
+            </form>
+        </div>
+        <div class="real_time_currency_rate">
+            <h4 class="currency_rate"></h4>
+            <span class="currency_rate_value"></span>
+        </div>
+        {% if current_user.is_authenticated %}
+        <div class="note_currency_rate">
+            <h4>Set Target CurrencyRate</h4>
+            <form action="/saveCurrencyRate" method="post" id="currency_save_form">
+                <div class="currency_from">
+                    <label for="currency">From currency</label>
+                    <select class="save_from_country" name="save_from_country" disabled></select>
+                </div>
+                <div class="currency_to">
+                    <label for="currency">To currency</label>
+                    <select class="save_to_country" name="save_to_country" disabled></select>
+                </div>
+                <div class="input_note_currency">
+                    <h5><b>Input CurrencyRate</b></h5>
+                    <input id="currencyInput" name="currencyInput" type="text" placeholder="Target Currency Rate"
+                        required="true" />
+                </div>
+                <!-- <button id="notificationBtn">알림 허용</button> -->
+                <span class="warn_message"></span>
+                <button id="save_currency_btn">save currency rate</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% if goalCurrencyList %}
+        <div class="currencyNotifiInfo">
+            <h5><b>Your Currency Notification Infofamation List</b></h5>
+            <h4><span class="targetCurrencyListSize" data-id="{{ goalCurrencyList|length }}">{{ goalCurrencyList|length
+                    }}</span>/4</h4>
+            <span id="getCurrencyRateNotiBtn">▼</span>
+            <div class="goalCurrencyList">
+                {% for goalCurrency in goalCurrencyList %}
+                <div class="content">
+                    <div>
+                        <form>
+                            <input class="notificationId" value="{{goalCurrency.id}}"></input>
+                            <label>from country</label>
+                            <input class="save_from_country" name="save_from_country" value={{goalCurrency.fromCountry}}
+                                readonly></input>
+                            <label>to country</label>
+                            <input class="save_to_country" name="saved_to_country" value={{goalCurrency.toCountry}}
+                                readonly></input>
+                            <label>target currency rate</label>
+                            <input class="saved_goal_currency" name="saved_goal_currency"
+                                value={{goalCurrency.goalCurrencyRate}} readonly></input>
+                        </form>
+                    </div>
+                    <div class="btn_group">
+                        <div class="content__btn_group">
+                            <span class="deleteCurrencyRateBtn"><i class='bx bx-trash bx-md'></i></span>
+                            <button class="cancelBtn hidden_Btn">Cancel</button>
+                            <span class="updateCurrencyRateBtn" data-id="{{goalCurrency.id}}"><i
+                                    class='bx bx-edit-alt bx-md'></i></span>
+                            <button class="saveCurrencyRateBtn hidden_Btn" data-id="{{goalCurrency.id}}">Save</button>
+                        </div>
+                        <div class="subscribe__btn_group">
+                            {% if goalCurrency.isSubscribed == 0 %}
+                            <span class="subscribeBtn" data-id="{{goalCurrency.id}}"><i
+                                    class='bx bxs-bell bx-md'></i></span>
+                            <span class="unSubscribeBtn hidden_Btn" data-id="{{goalCurrency.id}}"><i
+                                    class='bx bxs-bell-off bx-md '></i></span>
+                            {% endif %}
+                            {% if goalCurrency.isSubscribed == 1 %}
+                            <span class="subscribeBtn hidden_Btn" data-id="{{goalCurrency.id}}"><i
+                                    class='bx bxs-bell bx-md'></i></span>
+                            <span class="unSubscribeBtn" data-id="{{goalCurrency.id}}"><i
+                                    class='bx bxs-bell-off bx-md'></i></span>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+                {% endfor %}
             </div>
-            {% endif %}    
-            <div class="toast__content hidden-content"></div>        
-        </main>
-        <script type="text/javascript" src="{{ url_for('static', filename='country.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>        
-        <script type="text/javascript">
-            registerServiceWorker('/static/service_worker.js', "{{config['VAPID_PUBLIC_KEY']}}");
-        </script>                
-    </body>
+
+        </div>
+        {% endif %}
+        <div class="toast__content hidden-content"></div>
+    </main>
+    <footer>
+        <p>Copyright 2023. Kim Seheon. All right reserved</p>
+    </footer>
+    <script type="text/javascript">
+        let subscription_json = null;
+        let severKey = null;
+    </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/country.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script type="text/javascript">
+        registerServiceWorker('/static/service_worker.js', "{{config['VAPID_PUBLIC_KEY']}}");            
+    </script>
+</body>
+
 </html>
