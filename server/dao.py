@@ -29,68 +29,6 @@ db = pymysql.connect(
     charset="utf8"
 )
 
-
-class Session():
-    def __init__(self, _id, _user_Id):
-        self.id = _id
-        self.user_Id = _user_Id
-
-    @staticmethod
-    def getSession(user_Id):
-        try:
-            with db.cursor() as cursor:
-                sql = "select user_Id from sessions where user_Id=%s"
-                cursor.execute(sql, (user_Id))
-                result = cursor.fetchone()
-
-                if result:
-                    session = result[0]
-                    return session
-                else:
-                    return None
-        except Exception as e:
-            logging.error(
-                "An error occurred while getting session for user %s.", user_Id)
-            logging.error(traceback.format_exc())
-            return None
-
-    @staticmethod
-    def insertSession(user_Id):
-        sql = '''insert 
-            into sessions 
-            (
-                user_Id   
-            ) 
-            values
-            (
-                %s           
-            )'''
-        try:
-            with db.cursor() as cursor:
-                cursor.execute(sql, (user_Id,))
-                db.commit()
-                inserted_id = cursor.lastrowid
-                return inserted_id
-        except Exception as e:
-            logging.error(
-                "An error occurred while inserting session for user %s.", user_Id)
-            logging.error(traceback.format_exc())
-            return None
-
-    @staticmethod
-    def deleteSession(user_Id):
-        try:
-            with db.cursor() as cursor:
-                sql = "delete from sessions where user_Id=%s"
-                cursor.execute(sql, (user_Id,))
-                db.commit()
-        except Exception as e:
-            logging.error(
-                "An error occurred while deleting session for user %s.", user_Id)
-            logging.error(traceback.format_exc())
-            return None
-
-
 class User(UserMixin):
     def __init__(self, _id, _email):
         self.id = _id
