@@ -9,3 +9,5 @@ localhost.pem
 # /instance/application.cfg.py
 # fcm
 service_account.json
+# log
+/server/logs
