@@ -323,5 +323,5 @@ if __name__ == '__main__':
     # context.load_cert_chain('localhost.pem', 'localhost-key.pem')
 
     # app.run(ssl_context=context, debug=True)
-    app.run(debug=True, port=5000)
+    app.run(debug=False, port=5000)
     # app.run(debug=True, ssl_context='adhoc')
