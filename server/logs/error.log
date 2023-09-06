@@ -905,21 +905,3 @@
 2023-09-01 22:58:11,232 - werkzeug - INFO - 127.0.0.1 - - [01/Sep/2023 22:58:11] "[36mGET /static/icons/exchange.png HTTP/1.1[0m" 304 -
 2023-09-01 22:58:11,524 - werkzeug - INFO - 127.0.0.1 - - [01/Sep/2023 22:58:11] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
 2023-09-01 22:58:11,840 - werkzeug - INFO - 127.0.0.1 - - [01/Sep/2023 22:58:11] "[36mGET /static/icons/2228894.png HTTP/1.1[0m" 304 -
-2023-09-02 00:12:54,032 - werkzeug - INFO - 127.0.0.1 - - [02/Sep/2023 00:12:54] "GET /getCurrencyRate?currency_from=usd&currency_to=krw HTTP/1.1" 200 -
-2023-09-02 16:05:17,119 - werkzeug - INFO - 127.0.0.1 - - [02/Sep/2023 16:05:17] "[36mGET /static/icons/3467530.png HTTP/1.1[0m" 304 -
-2023-09-02 16:05:17,338 - werkzeug - INFO - 127.0.0.1 - - [02/Sep/2023 16:05:17] "[36mGET /static/icons/2228894.png HTTP/1.1[0m" 304 -
-2023-09-02 16:05:17,437 - werkzeug - INFO - 127.0.0.1 - - [02/Sep/2023 16:05:17] "[36mGET /static/icons/exchange.png HTTP/1.1[0m" 304 -
-2023-09-03 16:11:28,316 - werkzeug - INFO - 127.0.0.1 - - [03/Sep/2023 16:11:28] "[36mGET /static/service_worker.js HTTP/1.1[0m" 304 -
-2023-09-06 15:38:57,785 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on http://127.0.0.1:5000
-2023-09-06 15:38:57,786 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
-2023-09-06 15:39:10,506 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 15:39:10] "GET / HTTP/1.1" 200 -
-2023-09-06 15:39:10,639 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 15:39:10] "GET /static/style/index.css HTTP/1.1" 200 -
-2023-09-06 15:39:10,686 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 15:39:10] "GET /static/icons/exchange.png HTTP/1.1" 200 -
-2023-09-06 15:39:10,689 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 15:39:10] "GET /static/js/country.js HTTP/1.1" 200 -
-2023-09-06 15:39:10,690 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 15:39:10] "GET /static/js/index.js HTTP/1.1" 200 -
-2023-09-06 15:39:11,331 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 15:39:11] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
-2023-09-06 15:39:11,338 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 15:39:11] "GET /static/manifest.json HTTP/1.1" 200 -
-2023-09-06 15:39:11,351 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 15:39:11] "GET /static/icons/2228894.png HTTP/1.1" 200 -
-2023-09-06 15:40:04,564 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 15:40:04] "[32mGET /google-login HTTP/1.1[0m" 302 -
-2023-09-06 15:40:09,255 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 15:40:09] "[36mGET /static/icons/2228894.png HTTP/1.1[0m" 304 -
