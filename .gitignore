@@ -10,4 +10,4 @@ localhost.pem
 # fcm
 service_account.json
 # log
-/server/logs/error.log
+server/logs/error.log

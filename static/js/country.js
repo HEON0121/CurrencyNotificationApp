@@ -1,19 +1,19 @@
 const country = {
     Asia: [
-        'krw', // korea
-        'cny', // china
-        'hkd', // hongkong
-        'inr', // india
-        'jpy', // japan
-        'php',
-        'sgd', // singapole
-        'thb', // tailand
-        'twd', // taiwan
+        'KRW', // korea
+        'CNY', // china
+        'HKD', // hongkong
+        'INR', // india
+        'JPY', // japan
+        'PHP',
+        'SGD', // singapole
+        'THB', // tailand
+        'TWD', // taiwan
         //'vnd', // vietnam
-        'myr', // malaysia
-        'idr', // indonesia
+        'MYR', // malaysia
+        'IDR', // indonesia
     ],
-    Euro: ['eur'],
-    Oceania: ['aud', 'nzd'],
-    America: ['usd', 'ars'],
+    Euro: ['EUR'],
+    Oceania: ['AUD', 'NZD'],
+    America: ['USD', 'ARS'],
 };
