@@ -905,3 +905,44 @@
 2023-09-01 22:58:11,232 - werkzeug - INFO - 127.0.0.1 - - [01/Sep/2023 22:58:11] "[36mGET /static/icons/exchange.png HTTP/1.1[0m" 304 -
 2023-09-01 22:58:11,524 - werkzeug - INFO - 127.0.0.1 - - [01/Sep/2023 22:58:11] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
 2023-09-01 22:58:11,840 - werkzeug - INFO - 127.0.0.1 - - [01/Sep/2023 22:58:11] "[36mGET /static/icons/2228894.png HTTP/1.1[0m" 304 -
+2023-09-06 18:08:51,512 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:08:51] "[36mGET /static/style/index.css HTTP/1.1[0m" 304 -
+2023-09-06 18:08:51,515 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:08:51] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
+2023-09-06 18:10:53,872 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:10:53] "GET / HTTP/1.1" 200 -
+2023-09-06 18:10:53,892 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:10:53] "[36mGET /static/style/index.css HTTP/1.1[0m" 304 -
+2023-09-06 18:10:53,962 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:10:53] "[36mGET /static/js/country.js HTTP/1.1[0m" 304 -
+2023-09-06 18:10:53,965 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:10:53] "[36mGET /static/js/index.js HTTP/1.1[0m" 304 -
+2023-09-06 18:10:53,969 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:10:53] "[36mGET /static/icons/exchange.png HTTP/1.1[0m" 304 -
+2023-09-06 18:10:54,525 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:10:54] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
+2023-09-06 18:10:54,532 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:10:54] "[36mGET /static/icons/2228894.png HTTP/1.1[0m" 304 -
+2023-09-06 18:11:39,226 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:11:39] "GET / HTTP/1.1" 200 -
+2023-09-06 18:11:39,245 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:11:39] "[36mGET /static/style/index.css HTTP/1.1[0m" 304 -
+2023-09-06 18:11:39,297 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:11:39] "[36mGET /static/js/country.js HTTP/1.1[0m" 304 -
+2023-09-06 18:11:39,300 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:11:39] "[36mGET /static/js/index.js HTTP/1.1[0m" 304 -
+2023-09-06 18:11:39,301 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:11:39] "[36mGET /static/icons/exchange.png HTTP/1.1[0m" 304 -
+2023-09-06 18:11:39,877 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:11:39] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
+2023-09-06 18:11:39,883 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:11:39] "[36mGET /static/icons/2228894.png HTTP/1.1[0m" 304 -
+2023-09-06 18:12:02,239 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2023-09-06 18:12:02,239 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2023-09-06 18:12:05,479 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:12:05] "GET / HTTP/1.1" 200 -
+2023-09-06 18:12:05,534 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:12:05] "[36mGET /static/style/index.css HTTP/1.1[0m" 304 -
+2023-09-06 18:12:05,549 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:12:05] "[36mGET /static/js/country.js HTTP/1.1[0m" 304 -
+2023-09-06 18:12:05,550 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:12:05] "[36mGET /static/js/index.js HTTP/1.1[0m" 304 -
+2023-09-06 18:12:05,551 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:12:05] "[36mGET /static/icons/exchange.png HTTP/1.1[0m" 304 -
+2023-09-06 18:12:06,109 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:12:06] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
+2023-09-06 18:12:06,115 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:12:06] "[36mGET /static/icons/2228894.png HTTP/1.1[0m" 304 -
+2023-09-06 18:17:00,488 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2023-09-06 18:17:00,489 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2023-09-06 18:17:06,743 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:17:06] "GET / HTTP/1.1" 200 -
+2023-09-06 18:17:06,801 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:17:06] "GET /static/style/index.css HTTP/1.1" 200 -
+2023-09-06 18:17:06,816 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:17:06] "[36mGET /static/js/country.js HTTP/1.1[0m" 304 -
+2023-09-06 18:17:06,817 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:17:06] "[36mGET /static/icons/exchange.png HTTP/1.1[0m" 304 -
+2023-09-06 18:17:06,818 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:17:06] "[36mGET /static/js/index.js HTTP/1.1[0m" 304 -
+2023-09-06 18:17:07,410 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:17:07] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
+2023-09-06 18:17:07,417 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:17:07] "[36mGET /static/icons/2228894.png HTTP/1.1[0m" 304 -
+2023-09-06 18:17:35,354 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:17:35] "GET /getCurrencyRate?currency_from=KRW&currency_to=USD HTTP/1.1" 200 -
+2023-09-06 18:17:38,286 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:17:38] "GET /getCurrencyRate?currency_from=USD&currency_to=KRW HTTP/1.1" 200 -
+2023-09-06 18:17:39,229 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:17:39] "GET /getCurrencyRate?currency_from=USD&currency_to=KRW HTTP/1.1" 200 -
+2023-09-06 18:34:33,310 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:34:33] "GET /getCurrencyRate?currency_from=KRW&currency_to=AUD HTTP/1.1" 200 -
+2023-09-06 18:34:35,941 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2023 18:34:35] "GET /getCurrencyRate?currency_from=AUD&currency_to=KRW HTTP/1.1" 200 -

@@ -44,9 +44,9 @@
     <main>
         <div class="from_country_grp">
             <form action="#">
-                <label for="country_group">From (country group)</label>
+                <label for="country_group">From (Continent)</label>
                 <select class="from_country_group" name="country_group">
-                    <option value="select">Select a Group</option>
+                    <option value="select">Select</option>
                     <option value="Asia">Asia</option>
                     <option value="America">America</option>
                     <option value="Oceania">Oceania</option>
@@ -56,9 +56,9 @@
         </div>
         <div class="to_country_grp">
             <form action="#">
-                <label for="country_group">To (country group)</label>
+                <label for="country_group">To (Continent)</label>
                 <select class="to_country_group" name="country_group">
-                    <option value="select">Select a Group</option>
+                    <option value="select">Select</option>
                     <option value="Asia">Asia</option>
                     <option value="America">America</option>
                     <option value="Oceania">Oceania</option>
@@ -69,18 +69,18 @@
         <div class="currency_main">
             <form action="/getCurrencyRate" method="get" id="currency_main_form">
                 <div class="currency_from">
-                    <label for="currency">From (currency)</label>
+                    <label for="currency">From (Country)</label>
                     <select class="from_country" name="currency_from"></select>
                 </div>
                 <button id="switchBtn">
                     <img src="/static/icons/exchange.png" alt="exchange" />
                 </button>
                 <div class="currency_to">
-                    <label for="currency">To (currency)</label>
+                    <label for="currency">To (Country)</label>
                     <select class="to_country" name="currency_to"></select>
                 </div>
                 <div class="currency_cal">
-                    <button id="currency_cal_btn">Convert CurrencyRate</button>
+                    <button id="currency_cal_btn">Convert Currency Rate</button>
                 </div>
             </form>
         </div>
@@ -93,11 +93,11 @@
             <h4>Set Target CurrencyRate</h4>
             <form action="/saveCurrencyRate" method="post" id="currency_save_form">
                 <div class="currency_from">
-                    <label for="currency">From (currency)</label>
+                    <label for="currency">From (Currency)</label>
                     <select class="save_from_country" name="save_from_country" disabled></select>
                 </div>
                 <div class="currency_to">
-                    <label for="currency">To (currency)</label>
+                    <label for="currency">To (Currency)</label>
                     <select class="save_to_country" name="save_to_country" disabled></select>
                 </div>
                 <div class="input_note_currency">
@@ -107,7 +107,7 @@
                 </div>
                 <!-- <button id="notificationBtn">알림 허용</button> -->
                 <span class="warn_message"></span>
-                <button id="save_currency_btn">save currency rate</button>
+                <button id="save_currency_btn">Save Currency Rate</button>
             </form>
         </div>
         {% endif %}
@@ -124,13 +124,13 @@
                     <div>
                         <form>
                             <input class="notificationId" value="{{goalCurrency.id}}"></input>
-                            <label>From (country)</label>
+                            <label>From (Country)</label>
                             <input class="save_from_country" name="save_from_country" value={{goalCurrency.fromCountry}}
                                 readonly></input>
-                            <label>To (country)</label>
+                            <label>To (Country)</label>
                             <input class="save_to_country" name="saved_to_country" value={{goalCurrency.toCountry}}
                                 readonly></input>
-                            <label>Target currency rate</label>
+                            <label>Target Currency Rate</label>
                             <input class="saved_goal_currency" name="saved_goal_currency"
                                 value={{goalCurrency.goalCurrencyRate}} readonly></input>
                         </form>

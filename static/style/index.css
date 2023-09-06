@@ -80,6 +80,7 @@ select {
 
 .currency_from,
 .currency_to {
+    text-align: center;
     margin-bottom: 10px;
 }
 
