@@ -233,6 +233,10 @@ const updateCurrencyRate = () => {
             if (response.currency_rate) {
                 let currencyRateElement = document.querySelector('.currency_rate');
                 currencyRateElement.textContent = 'Current Currency rate';
+                let currencyFrom = document.querySelector('.currency_rate_from');
+                currencyFrom.textContent = `1 ${from_country.value}`;
+                let currency_rate_stick = document.querySelector('.currency_rate_stick');
+                currency_rate_stick.textContent = '|';
                 let currencyRate = document.querySelector('.currency_rate_value');
                 currencyRate.textContent = response.currency_rate;
             }
