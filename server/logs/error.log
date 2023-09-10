@@ -1026,3 +1026,17 @@
 2023-09-10 15:57:42,116 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2023 15:57:42] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
 2023-09-10 15:57:42,432 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2023 15:57:42] "[36mGET /static/icons/2228894.png HTTP/1.1[0m" 304 -
 2023-09-10 15:57:46,870 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2023 15:57:46] "GET /getCurrencyRate?currency_from=KRW&currency_to=EUR HTTP/1.1" 200 -
+2023-09-10 16:10:08,725 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2023-09-10 16:10:08,726 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2023-09-10 16:10:10,607 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2023 16:10:10] "GET / HTTP/1.1" 200 -
+2023-09-10 16:10:10,662 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2023 16:10:10] "GET /static/style/index.css HTTP/1.1" 200 -
+2023-09-10 16:10:10,827 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2023 16:10:10] "[36mGET /static/js/country.js HTTP/1.1[0m" 304 -
+2023-09-10 16:10:10,957 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2023 16:10:10] "[36mGET /static/icons/exchange.png HTTP/1.1[0m" 304 -
+2023-09-10 16:10:10,962 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2023 16:10:10] "[36mGET /static/js/index.js HTTP/1.1[0m" 304 -
+2023-09-10 16:10:11,458 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2023 16:10:11] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
+2023-09-10 16:10:11,775 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2023 16:10:11] "[36mGET /static/icons/2228894.png HTTP/1.1[0m" 304 -
+2023-09-10 16:10:17,431 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2023 16:10:17] "GET /getCurrencyRate?currency_from=KRW&currency_to=AUD HTTP/1.1" 200 -
+2023-09-10 16:10:20,183 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2023 16:10:20] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
+2023-09-10 16:10:20,494 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2023 16:10:20] "[36mGET /static/style/index.css HTTP/1.1[0m" 304 -
+2023-09-10 16:10:52,365 - werkzeug - INFO - 127.0.0.1 - - [10/Sep/2023 16:10:52] "GET /getCurrencyRate?currency_from=AUD&currency_to=KRW HTTP/1.1" 200 -
