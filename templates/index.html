@@ -84,11 +84,21 @@
                 </div>
             </form>
         </div>
-        <div class="real_time_currency_rate">
+        <div class="real_time_currency_rate hidden_div">
             <h4 class="currency_rate"></h4>
             <span class="currency_rate_from"></span>
             <span class="currency_rate_stick"></span>
             <span class="currency_rate_value"></span>
+
+            <div class="real_time_currency_rate_to">
+                <input id="cal_currency_from" type="text" value="">
+                <select class="cal_from_country" name="currency_from" disabled ></select>                                
+            </div>            
+            <div class="real_time_currency_rate_from">
+                <input id="cal_currency_to" type="text" value="">
+                <select class="cal_to_country" name="currency_to" disabled ></select>                                
+            </div>            
+            
         </div>
         {% if current_user.is_authenticated %}
         <div class="note_currency_rate">

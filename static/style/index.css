@@ -109,6 +109,37 @@ select {
     text-align: center;
     margin-bottom: 15px;
 }
+.hidden_div {
+    display: none;
+}
+
+.real_time_currency_rate_to {
+    display: flex;
+    padding: 1rem;
+    flex-direction: row;
+    border-radius: 6px;
+    justify-content: center;
+}
+
+#cal_currency_from {
+    height: 40px;
+    width: 100px;
+    overflow: hidden;
+}
+
+.real_time_currency_rate_from {
+    display: flex;
+    padding: 1rem;
+    flex-direction: row;
+    border-radius: 6px;
+    justify-content: center;
+}
+
+#cal_currency_to {
+    height: 40px;
+    width: 100px;
+    overflow: hidden;
+}
 
 .note_currency_rate {
     display: flex;

@@ -20,11 +20,19 @@ const cancelBtns = document.querySelectorAll('.cancelBtn');
 const subscribeBtns = document.querySelectorAll('.subscribeBtn');
 const unSubscribeBtns = document.querySelectorAll('.unSubscribeBtn');
 const targetCurrencyListSize = document.querySelector('.targetCurrencyListSize');
+const real_time_currency_rate = document.querySelector('.real_time_currency_rate');
+const cal_currency_from = document.getElementById('cal_currency_from');
+const cal_currency_to = document.getElementById('cal_currency_to');
+const cal_from_country = document.querySelector('.cal_from_country');
+const cal_to_country = document.querySelector('.cal_to_country');
 let from_currency = '';
 let to_currency = '';
+let currentCurrencyRate = '';
 
 let save_from_currency = '';
 let save_to_currency = '';
+
+currency_cal_btn.disabled = true;
 
 const pick_from_group = (group) => {
     let from_countries = [];
@@ -232,13 +240,17 @@ const updateCurrencyRate = () => {
             let response = JSON.parse(xhr.responseText);
             if (response.currency_rate) {
                 let currencyRateElement = document.querySelector('.currency_rate');
-                currencyRateElement.textContent = 'Current Currency rate';
+                currencyRateElement.textContent = 'Current Currency Rate';
                 let currencyFrom = document.querySelector('.currency_rate_from');
                 currencyFrom.textContent = `1 ${from_country.value}`;
                 let currency_rate_stick = document.querySelector('.currency_rate_stick');
                 currency_rate_stick.textContent = '|';
                 let currencyRate = document.querySelector('.currency_rate_value');
                 currencyRate.textContent = response.currency_rate;
+                currentCurrencyRate = response.currency_rate.slice(0, -4);
+                console.log(currentCurrencyRate);
+                // set input to calculate
+                setInputforCal();
             }
         }
     };
@@ -247,19 +259,62 @@ const updateCurrencyRate = () => {
         console.error('Error occurred during the request.');
     };
 };
-/**
- *
- * to-do: return script func into python schedule func
- */
+// set cal input
+const setInputforCal = () => {
+    // show real time currency rate div
+    real_time_currency_rate.classList.remove('hidden_div');
+    // set input value
+    cal_currency_from.value = 1;
+    cal_currency_to.value = currentCurrencyRate;
+    // set select box
+    setSelectBoxforCal();
+};
+// set cal select box
+const setSelectBoxforCal = () => {
+    if (cal_from_country) {
+        if (cal_from_country.firstChild) {
+            cal_from_country.replaceChildren();
+        }
+        let fromOption = document.createElement('option');
+        fromOption.value = from_country.value;
+        fromOption.append(from_country.value);
+        cal_from_country.append(fromOption);
+    }
 
+    if (cal_to_country) {
+        if (cal_to_country.firstChild) {
+            cal_to_country.replaceChildren();
+        }
+        let toOption = document.createElement('option');
+        toOption.value = to_country.value;
+        toOption.append(to_country.value);
+        cal_to_country.append(toOption);
+    }
+};
+
+// calculate
+cal_currency_from.addEventListener('input', function (e) {
+    // regEx
+    validateNumericInput(e);
+    // var input
+    input_from = this.value;
+    input_to = Number(input_from.replace(/,/g, '')) * Number(currentCurrencyRate);
+    cal_currency_to.value = input_to;
+});
+cal_currency_to.addEventListener('input', function (e) {
+    // regEx
+    validateNumericInput(e);
+    // var input
+    input_to = this.value;
+    input_from = Number(input_to.replace(/,/g, '')) / Number(currentCurrencyRate);
+    cal_currency_from.value = input_from;
+});
 // get real time currency-rate
 
 const getCurrencyRate = (e) => {
     e.preventDefault();
 
     updateCurrencyRate();
-
-    // currency_cal_btn.disabled = true;
 };
 
 currency_cal_btn.addEventListener('click', getCurrencyRate);
@@ -268,7 +323,25 @@ currency_main_form.addEventListener('submit', (e) => {
 });
 
 // currency goal input regEx
+const validateNumericInput = (e) => {
+    // Extract only numbers and decimals.
+    const number = e.target.value.replace(/[^\d.]/g, '');
 
+    // f there are decimal numbers, display up to three digits below the decimal point.
+    const parts = number.split('.');
+    // Add commas for thousands
+    const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    // Set a value in the input field.
+    if (parts.length === 1) {
+        // If there are no numbers after the decimal point.
+        e.target.value = integerPart;
+    } else {
+        // Display up to three decimal places.
+        const decimalPart = parts[1].slice(0, 3);
+        // return formatted number
+        e.target.value = `${integerPart}.${decimalPart}`;
+    }
+};
 currencyInput.addEventListener('input', function () {
     // Extract only numbers and decimals.
     const number = this.value.replace(/[^\d.]/g, '');
