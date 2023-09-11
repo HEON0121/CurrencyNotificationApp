@@ -16,6 +16,14 @@ back-end
 -
 python flask
 
+db
+-
+mysql
+
+others
+-
+nginx / gunicorn / aws lightsail / aws Route53
+
 screen shot
 ------------------------------------------------------
 ![image](https://github.com/HEON0121/CurrencyNotificationApp/assets/59715255/e9875f2a-6d58-4180-9d8e-081ee82396e0)
