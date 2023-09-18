@@ -298,7 +298,23 @@ cal_currency_from.addEventListener('input', function (e) {
     validateNumericInput(e);
     // var input
     input_from = this.value;
-    input_to = Number(input_from.replace(/,/g, '')) * Number(currentCurrencyRate);
+    input_to = Number(input_from.replace(/,/g, '')) * Number(currentCurrencyRate.replace(/,/g, ''));
+    input_to = input_to.toString().replace(/[^\d.]/g, '');
+
+    // f there are decimal numbers, display up to three digits below the decimal point.
+    const parts = input_to.split('.');
+    // Add commas for thousands
+    const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    // Set a value in the input field.
+    if (parts.length === 1) {
+        // If there are no numbers after the decimal point.
+        input_to = integerPart;
+    } else {
+        // Display up to three decimal places.
+        const decimalPart = parts[1].slice(0, 3);
+        // return formatted number
+        input_to = `${integerPart}.${decimalPart}`;
+    }
     cal_currency_to.value = input_to;
 });
 cal_currency_to.addEventListener('input', function (e) {
@@ -306,7 +322,23 @@ cal_currency_to.addEventListener('input', function (e) {
     validateNumericInput(e);
     // var input
     input_to = this.value;
-    input_from = Number(input_to.replace(/,/g, '')) / Number(currentCurrencyRate);
+    input_from = Number(input_to.replace(/,/g, '')) / Number(currentCurrencyRate.replace(/,/g, ''));
+    input_from = input_from.toString().replace(/[^\d.]/g, '');
+
+    // f there are decimal numbers, display up to three digits below the decimal point.
+    const parts = input_from.split('.');
+    // Add commas for thousands
+    const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    // Set a value in the input field.
+    if (parts.length === 1) {
+        // If there are no numbers after the decimal point.
+        input_from = integerPart;
+    } else {
+        // Display up to three decimal places.
+        const decimalPart = parts[1].slice(0, 3);
+        // return formatted number
+        input_from = `${integerPart}.${decimalPart}`;
+    }
     cal_currency_from.value = input_from;
 });
 // get real time currency-rate
